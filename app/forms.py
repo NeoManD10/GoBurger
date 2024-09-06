@@ -10,13 +10,13 @@ class LoginForm(forms.Form):
         contrasena = self.cleaned_data.get('contrasena')  # Cambia aquí también
 
         try:
+            # Busca el usuario en la base de datos
             usuario = Usuario.objects.get(email=email)
+            if usuario.contrasena != contrasena:
+                raise forms.ValidationError("Contraseña incorrecta.")
         except Usuario.DoesNotExist:
-            raise forms.ValidationError("Usuario no encontrado.")
-
-        if usuario.contrasena != contrasena:  # Cambia aquí también
-            raise forms.ValidationError("Contraseña incorrecta.")
-
+            raise forms.ValidationError("El usuario no existe.")
+        
         return self.cleaned_data
 
 class RegisterForm(forms.ModelForm):

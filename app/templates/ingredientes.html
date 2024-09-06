@@ -1,33 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingredientes</title>
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <title>Ingredientes - GoyoBurger</title>
+    <link rel="stylesheet" href="{% static 'ingredientes.css' %}">
 </head>
 <body>
     <nav>
         <div class="logo">
-            <h1>GoyoBurguer</h1>
+            <h1>GoyoBurger</h1>
         </div>
         <ul class="nav-links">
+            <li><a href="{% url 'home' %}">Inicio</a></li>
             <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
             <li><a href="{% url 'register' %}">Registrarse</a></li>
         </ul>
     </nav>
 
-    <section class="ingredients">
-        <h1>Elige tus Ingredientes</h1>
-        <ul>
+    <section class="ingredientes-section">
+        <h1>Ingredientes Disponibles</h1>
+        <ul class="ingredientes-list">
             {% for ingrediente in ingredientes %}
-            <li>{{ ingrediente.nombre }} - {{ ingrediente.tipo }} - ${{ ingrediente.precio }}</li>
+                <li>{{ ingrediente.nombre }} - {{ ingrediente.tipo }} - ${{ ingrediente.precio }}</li>
+            {% empty %}
+                <li>No hay ingredientes disponibles en este momento.</li>
             {% endfor %}
         </ul>
     </section>
 
     <footer>
-        <p>© 2024 GoyoBurguer - Todos los derechos reservados</p>
+        <p>© 2024 GoyoBurger - Todos los derechos reservados</p>
     </footer>
 </body>
 </html>

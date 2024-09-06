@@ -1,35 +1,28 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    {% load static %}  <!-- Cargar archivos estáticos -->
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoyoBurguer - Inicio</title>
+    <title>GoyoBurger - Inicio</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 <body>
-    <!-- Barra de navegación -->
     <nav>
-        <div class="logo">
-            <h1>GoyoBurguer</h1>
-        </div>
         <ul class="nav-links">
             <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
             <li><a href="{% url 'register' %}">Registrarse</a></li>
         </ul>
     </nav>
 
-    <!-- Sección de bienvenida -->
     <section class="hero">
-        <h1>Bienvenido a GoyoBurguer</h1>
+        <h1>Bienvenido a GoyoBurger</h1>
         <p>Personaliza tu hamburguesa con los mejores ingredientes</p>
-        <div class="cta-buttons">
-            <a href="{% url 'ingredientes' %}" class="btn">Explorar Ingredientes</a>
-        </div>
+        <a href="{% url 'ingredientes' %}" class="btn">Explorar Ingredientes</a>
+
     </section>
 
     <footer>
-        <p>© 2024 GoyoBurguer - Todos los derechos reservados</p>
+        <p>© 2024 GoyoBurger - Todos los derechos reservados</p>
     </footer>
-</body>
-</html>
+
