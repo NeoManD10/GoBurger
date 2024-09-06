@@ -31,3 +31,5 @@ class PedidoIngrediente(models.Model):
 
     def __str__(self):
         return f'Ingrediente {self.ingrediente.nombre} en Pedido {self.pedido.id}'
+    
+
