@@ -1,5 +1,6 @@
 GoyoBurger es una aplicación web donde los usuarios pueden personalizar sus hamburguesas eligiendo hasta 4 ingredientes de una variedad de opciones. Los usuarios pueden registrarse, iniciar sesión, realizar pedidos y consultar su historial de pedidos.
-![image](https://github.com/user-attachments/assets/40d693cf-1707-42b2-89b3-8e4d02cea225)
+
+![image](https://github.com/user-attachments/assets/2db28110-600d-4f4f-aa32-4750c40fd456)
 
 ![image](https://github.com/user-attachments/assets/046c70e6-054e-4ef5-a9ae-f0b6ac7332bc)
 
