@@ -6,7 +6,7 @@ GoyoBurger es una aplicación web donde los usuarios pueden personalizar sus ham
 
 ![image](https://github.com/user-attachments/assets/4ac02371-a9bd-4c74-9089-5cdd784861a8)
 
-![image](https://github.com/user-attachments/assets/a88cc35d-c229-4e11-9436-3198e789a082)
+![image](https://github.com/user-attachments/assets/6c2dd8d7-cc0b-4494-8bb5-124c91a72997)
 
 ![image](https://github.com/user-attachments/assets/82d536d8-7962-43fb-bead-421630011000)
 
