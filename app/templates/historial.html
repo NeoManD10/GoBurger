@@ -1,0 +1,14 @@
+<h1>Historial de Pedidos</h1>
+
+<ul>
+    {% for pedido in historial_pedidos %}
+        <li>
+            Pedido realizado el {{ pedido.fecha_pedido }} - Total: ${{ pedido.calcular_total }}
+            <ul>
+                {% for item in pedido.pedidoingrediente_set.all %}
+                    <li>{{ item.ingrediente.nombre }} - ${{ item.ingrediente.precio }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>

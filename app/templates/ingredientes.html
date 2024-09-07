@@ -4,34 +4,56 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingredientes - GoyoBurger</title>
-    <link rel="stylesheet" href="{% static 'ingredientes.css' %}">
+    <title>Selecciona Ingredientes</title>
+    <link rel="stylesheet" href="{% static 'ingredientes.css' %}"> <!-- Aquí va link al CSS de ingredientes -->
 </head>
 <body>
-    <nav>
-        <div class="logo">
-            <h1>GoyoBurger</h1>
-        </div>
-        <ul class="nav-links">
-            <li><a href="{% url 'home' %}">Inicio</a></li>
-            <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
-            <li><a href="{% url 'register' %}">Registrarse</a></li>
-        </ul>
-    </nav>
+    <form method="POST">
+        {% csrf_token %}
+        <section class="ingredientes-section">
+            <h1>Selecciona los Ingredientes</h1>
+            <ul class="ingredientes-list">
+                {% for ingrediente in ingredientes %}
+                    <li>
+                        <input type="checkbox" name="ingredientes" value="{{ ingrediente.id }}" class="ingredient-checkbox"
+                            data-precio="{{ ingrediente.precio }}"> 
+                        {{ ingrediente.nombre }} ({{ ingrediente.tipo }}) - ${{ ingrediente.precio }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+        
+        <p>Total: $<span id="totalPrecio">0.00</span></p>
+        
+        <button type="submit">Confirmar Pedido</button>
+    </form>
 
-    <section class="ingredientes-section">
-        <h1>Ingredientes Disponibles</h1>
-        <ul class="ingredientes-list">
-            {% for ingrediente in ingredientes %}
-                <li>{{ ingrediente.nombre }} - {{ ingrediente.tipo }} - ${{ ingrediente.precio }}</li>
-            {% empty %}
-                <li>No hay ingredientes disponibles en este momento.</li>
-            {% endfor %}
-        </ul>
-    </section>
+    <script>
+        // JavaScript para calcular el total de ingredientes seleccionados y limitar a 4 ingredientes.
+        const checkboxes = document.querySelectorAll('.ingredient-checkbox');
+        const totalPrecioElement = document.getElementById('totalPrecio');
+        let total = 0;
+        let selectedCount = 0;
 
-    <footer>
-        <p>© 2024 GoyoBurger - Todos los derechos reservados</p>
-    </footer>
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const precio = parseFloat(this.getAttribute('data-precio'));
+                if (this.checked) {
+                    if (selectedCount >= 4) {
+                        alert("Solo puedes seleccionar hasta 4 ingredientes.");
+                        this.checked = false;
+                        return;
+                    }
+                    total += precio;
+                    selectedCount++;
+                } else {
+                    total -= precio;
+                    selectedCount--;
+                }
+                totalPrecioElement.textContent = total.toFixed(2);
+            });
+        });
+    </script>
 </body>
 </html>
+

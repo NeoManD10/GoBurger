@@ -1,0 +1,19 @@
+{% load static %}
+<h1>Resumen de tu Pedido</h1>
+<ul class="ingredientes-list">
+    {% for pedido_ingrediente in ingredientes %}
+        <li>{{ pedido_ingrediente.ingrediente.nombre }} - ${{ pedido_ingrediente.ingrediente.precio }}</li>
+    {% endfor %}
+</ul>
+<p>Total del Pedido: ${{ total_precio }}</p>
+
+<link rel="stylesheet" href="{% static 'carrito.css' %}">
+<a href="{% url 'ingredientes' %}" class="btn">Seguir comprando</a>
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}

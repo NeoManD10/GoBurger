@@ -65,3 +65,34 @@ footer {
     color: #fff;
 }
 
+/* Estilos para el historial de pedidos */
+.historial-pedidos {
+    list-style: none;
+    padding: 0;
+}
+
+.historial-pedidos li {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+}
+
+.historial-pedidos li strong {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #333;
+}
+
+.historial-pedidos ul {
+    list-style: none;
+    padding-left: 20px;
+}
+
+.historial-pedidos ul li {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+

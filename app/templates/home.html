@@ -10,8 +10,13 @@
 <body>
     <nav>
         <ul class="nav-links">
-            <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
-            <li><a href="{% url 'register' %}">Registrarse</a></li>
+            {% if request.session.usuario_nombre %}
+                <li>Bienvenido, {{ request.session.usuario_nombre }}</li>
+                <li><a href="{% url 'logout' %}">Cerrar Sesión</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
+                <li><a href="{% url 'register' %}">Registrarse</a></li>
+            {% endif %}
         </ul>
     </nav>
 
@@ -19,10 +24,59 @@
         <h1>Bienvenido a GoyoBurger</h1>
         <p>Personaliza tu hamburguesa con los mejores ingredientes</p>
         <a href="{% url 'ingredientes' %}" class="btn">Explorar Ingredientes</a>
-
     </section>
 
     <footer>
         <p>© 2024 GoyoBurger - Todos los derechos reservados</p>
     </footer>
 
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if request.session.usuario_nombre %}
+        <button id="mostrar-historial" class="btn">Mostrar Historial de Pedidos</button>
+
+        <div id="historial-pedidos" style="display:none;">
+            {% if historial_completo %}
+                <h2>Historial de tus Pedidos</h2>
+                <ul class="historial-pedidos">
+                    {% for pedido in historial_completo %}
+                        <li>
+                            <strong>Pedido realizado el {{ pedido.pedido.fecha_pedido }}</strong>
+                            <ul>
+                                {% for ingrediente in pedido.ingredientes %}
+                                    <li>{{ ingrediente.ingrediente.nombre }} - ${{ ingrediente.ingrediente.precio }}</li>
+                                {% endfor %}
+                            </ul>
+                            <strong>Total del Pedido: ${{ pedido.total_precio }}</strong> <!-- Mostrar el total calculado en la vista -->
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No tienes pedidos anteriores.</p>
+            {% endif %}
+        </div>
+
+        <script>
+            // Mostrar el historial cuando se presiona el botón
+            document.getElementById('mostrar-historial').addEventListener('click', function() {
+                var historialDiv = document.getElementById('historial-pedidos');
+                if (historialDiv.style.display === "none") {
+                    historialDiv.style.display = "block";
+                    this.textContent = "Ocultar Historial de Pedidos";
+                } else {
+                    historialDiv.style.display = "none";
+                    this.textContent = "Mostrar Historial de Pedidos";
+                }
+            });
+        </script>
+    {% else %}
+        <p>Inicia sesión para ver tu historial de pedidos.</p>
+    {% endif %}
+</body>
+</html>
