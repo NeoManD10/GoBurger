@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from .forms import LoginForm, RegisterForm
-from .models import Usuario, Ingrediente,HistorialPedido, PedidoIngrediente
+from .models import Usuario, Ingrediente,HistorialPedido, PedidoIngrediente, HistorialPedido
 
 def login_view(request):
     if request.method == 'POST':
@@ -206,8 +206,3 @@ def home_view(request):
         context = {}
 
     return render(request, 'home.html', context)
-
-
-
-
-

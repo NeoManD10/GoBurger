@@ -27,6 +27,5 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('historial/', historial_view, name='historial'),
     path('carrito/', carrito_view, name='carrito'), 
-
 ]
 
