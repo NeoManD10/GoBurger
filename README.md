@@ -2,7 +2,7 @@
 
 **GoyoBurger** is a web application where users can customize their burgers by choosing up to 4 toppings from a variety of options. Users can register, log in, place orders and view their order history.
 
-  ## Index
+## Index
 - [Requeriments](#Requirements)
 - [Installation](#Installation)
 - [Screenshots](#Screenshots)
