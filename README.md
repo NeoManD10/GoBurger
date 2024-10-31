@@ -1,22 +1,18 @@
-## Information systems application
+# Information systems application
 
-**GoyoBurger** is a web application where users can customize their burgers by choosing up to 4 toppings from a variety of options. 
-- Users can register
-- log in
-- place orders
-- view their order history
+**GoyoBurger** is a web application where users can customize their burgers by choosing up to 4 toppings from a variety of options. Users can register, log in, place orders and view their order history.
 
-  ### Index
+  ## Index
 - [Installation](#Installation)
 - [Prototype design images](#Prototye)
 - [Creators](#Creators)  
 
-  ### Requirements
+  ## Requirements
 
-- [python or python3](https://www.python.org/)
-- pip
+  [python or python3](https://www.python.org/)
+  pip
 
-  ## Prototype design images
+  # Prototype design images
 
 ![image](https://github.com/user-attachments/assets/2db28110-600d-4f4f-aa32-4750c40fd456)
 
@@ -28,9 +24,9 @@
 
 ![image](https://github.com/user-attachments/assets/095dea7a-7149-4582-bca5-a823df3f4f56)
 
-### Installation
+## Installation
 
-##### linux/Mac OS
+### linux/Mac OS
 - Create a folder called for example: test 
 Once inside this folder open the terminal and write the command
 ```bash
