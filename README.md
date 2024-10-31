@@ -6,14 +6,14 @@
 - place orders
 - view their order history
 
-  ## Index
+  ### Index
 - [Installation](#Installation)
 - [Prototype design images](#Prototye)
 - [Creators](#Creators)  
 
-  ## Requirements
+  ### Requirements
 
-- [python](https://www.python.org/)
+- [python or python3](https://www.python.org/)
 - pip
 
   ## Prototype design images
@@ -28,7 +28,7 @@
 
 ![image](https://github.com/user-attachments/assets/095dea7a-7149-4582-bca5-a823df3f4f56)
 
-## Installation
+### Installation
 
 ##### linux/Mac OS
 - Create a folder called for example: test 
@@ -36,11 +36,23 @@
 ```bash
 $ git clone https://github.com/NeoManD10/GoBurger.git
 $ cd GoBurger
-´´´
-- Create a virtual environment using the command **python3 -m venv "name_environment"**
-- Activate the virtual environment using the command **source name_environment/bin/activate**
-- Install the requirements using the command **pip install -r requirements.txt**
-- Finally, run the application with **python3 manage.py runserver** 
+```
+- Create a virtual environment using the command
+```bash
+$ python3 -m venv "name_environment"
+```
+- Activate the virtual environment using the command
+```bash
+$ source name_environment/bin/activate
+```
+- Install the requirements using the command
+```bash
+$ pip install -r requirements.txt
+```
+- Finally, run the application with
+ ```bash
+$ python3 manage.py runserver
+```
 
 ## Creators
 
