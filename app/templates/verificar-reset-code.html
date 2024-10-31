@@ -4,7 +4,7 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
+    <title>Verificar codigo</title>
     <link rel="stylesheet" href="{% static 'register.css' %}"> <!-- Reutilizamos el CSS de registro -->
 </head>
 <body>
@@ -17,13 +17,12 @@
         <!-- Sección derecha con el formulario de inicio de sesión -->
         <div class="right-section">
             <div class="form-container">
-                <h2>Iniciar Sesión</h2>
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <li><a href="{% url 'generar-reset-code' %}" style="text-decoration: none"> Recuperar contraseña</a></li>
-                    <button type="submit" class="btn">Ingresar</button>
-                </form>
+                <h2>Ingresar codigo de verificación</h2>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn">Verificar</button>
+                    </form>
             </div>
         </div>
     </div>

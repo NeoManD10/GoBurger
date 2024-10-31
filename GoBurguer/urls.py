@@ -16,7 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.views import login_view, home, ingredientes_view, register_view, logout_view , historial_view,carrito_view# Cambia 'app' al nombre correcto de tu aplicación
+from app.views import login_view, home, ingredientes_view, register_view, logout_view, historial_view,carrito_view, generar_reset_code_view, verificar_reset_code_view, actualizar_contrasena_view
+# Cambia 'app' al nombre correcto de tu aplicación
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +28,7 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('historial/', historial_view, name='historial'),
     path('carrito/', carrito_view, name='carrito'), 
-
+    path('generar-reset-code/', generar_reset_code_view, name='generar-reset-code'),
+    path('verificar-reset-code/', verificar_reset_code_view, name='verificar-reset-code'),
+    path('actualizar-contrasena/', actualizar_contrasena_view, name='actualizar-contrasena'),
 ]
-

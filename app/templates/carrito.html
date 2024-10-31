@@ -1,19 +1,38 @@
-{% load static %}
-<h1>Resumen de tu Pedido</h1>
-<ul class="ingredientes-list">
-    {% for pedido_ingrediente in ingredientes %}
-        <li>{{ pedido_ingrediente.ingrediente.nombre }} - ${{ pedido_ingrediente.ingrediente.precio }}</li>
-    {% endfor %}
-</ul>
-<p>Total del Pedido: ${{ total_precio }}</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen de tu Pedido</title>
+    <link rel="stylesheet" href="{% static 'carrito.css' %}">
+</head>
+<body>
+    <h1>Resumen de tu Pedido</h1>
 
-<link rel="stylesheet" href="{% static 'carrito.css' %}">
-<a href="{% url 'ingredientes' %}" class="btn">Seguir comprando</a>
-
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li class="{{ message.tags }}">{{ message }}</li>
+    <ul>
+        {% for ingrediente in ingredientes %}
+            <li>{{ ingrediente.ingrediente.nombre }} - ${{ ingrediente.ingrediente.precio }}</li>
         {% endfor %}
     </ul>
-{% endif %}
+
+    <p>Total del Pedido: ${{ total_precio }}</p> 
+
+    <div class="buttons">
+        <a href="{% url 'ingredientes' %}" class="btn">Seguir comprando</a>
+        <a href="{% url 'home' %}" class="btn">Volver al inicio</a>
+    </div>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>
+
+
+
+
