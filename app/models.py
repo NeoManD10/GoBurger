@@ -37,3 +37,15 @@ class PedidoIngrediente(models.Model):
     def __str__(self):
         return f'Ingrediente {self.ingrediente.nombre} en Pedido {self.pedido.id}'
     
+
+
+class Carrito(models.Model):
+    carrito_id = models.AutoField(primary_key=True)  # SERIAL PK en PostgreSQL
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)  # SERIAL FK en PostgreSQL
+    precio_total = models.DecimalField(max_digits=10, decimal_places=2)  # DECIMAL(10,2)
+    hora_de_creacion = models.DateTimeField(auto_now_add=True)  # TIMESTAMP para la fecha de creación
+
+    def __str__(self):
+        return f'Carrito {self.carrito_id} del usuario {self.usuario.nombre}'
+
+    

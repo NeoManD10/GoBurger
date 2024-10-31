@@ -39,7 +39,11 @@
     {% endif %}
 
     {% if request.session.usuario_nombre %}
+
         <button id="mostrar-historial" class="btn">Mostrar Historial de Pedidos</button>
+        <a href="{% url 'eliminar_historial' %}" onclick="return confirm('¿Estás seguro de que deseas eliminar tu historial de pedidos?');" class="btn">
+            Eliminar Historial de Pedidos
+        </a>
 
         <div id="historial-pedidos" style="display:none;">
             {% if historial_completo %}
@@ -80,3 +84,6 @@
     {% endif %}
 </body>
 </html>
+
+
+

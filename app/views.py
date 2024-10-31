@@ -206,3 +206,15 @@ def home_view(request):
         context = {}
 
     return render(request, 'home.html', context)
+
+
+def eliminar_historial_view(request):
+    usuario_id = request.session.get('usuario_id')
+    if usuario_id:
+        # Eliminar todos los pedidos del usuario
+        HistorialPedido.objects.filter(usuario_id=usuario_id).delete()
+        messages.success(request, "Historial de pedidos eliminado correctamente.")
+    else:
+        messages.error(request, "Debes iniciar sesión para eliminar tu historial.")
+    return redirect('home')
+
