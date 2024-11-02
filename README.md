@@ -11,6 +11,7 @@
 ## Requirements
 
 - [python or python3](https://www.python.org/)
+- [MailHog](https://github.com/mailhog/MailHog)
 - pip
 
 ## Screenshots
@@ -42,6 +43,8 @@ Finally, run the application with
  ```bash
 $ python3 manage.py runserver
 ```
+## Notes
+This webpage currently uses MailHog for recieving emails when updating a forgotten password.
 
 ## Creators
 

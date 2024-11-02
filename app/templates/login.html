@@ -21,6 +21,7 @@
                 <form method="POST">
                     {% csrf_token %}
                     {{ form.as_p }}
+                    <li><a href="{% url 'generar-reset-code' %}" style="text-decoration: none"> Recuperar contraseña</a></li>
                     <button type="submit" class="btn">Ingresar</button>
                 </form>
             </div>
