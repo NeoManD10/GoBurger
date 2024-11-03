@@ -1,5 +1,6 @@
 from django import forms
 from .models import Usuario
+import random
 
 class LoginForm(forms.Form):
     email = forms.EmailField(max_length=150, required=True)
@@ -25,4 +26,3 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = Usuario
         fields = ['nombre', 'email', 'contrasena']  # Campos que quieres que el usuario complete
-

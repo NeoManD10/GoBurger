@@ -21,6 +21,7 @@
                 <form method="POST"> <!--Formulario para enviar los datos de inicio de sesión-->
                     {% csrf_token %} <!--Token de seguridad de Django que evita ataques de tipo CSRF (Cross-Site Request Forgery).-->
                     {{ form.as_p }} <!--Representación del formulario en HTML, generada por Django.-->
+                    <li><a href="{% url 'generar-reset-code' %}" style="text-decoration: none"> Recuperar contraseña</a></li> <!-- Envia a la página de recuperación de contraseña -->
                     <button type="submit" class="btn">Ingresar</button> <!--Botón de envío que permite al usuario ingresar con su cuenta-->
                 </form>
             </div>

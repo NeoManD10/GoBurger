@@ -5,6 +5,7 @@ class Usuario(models.Model):
     email = models.EmailField(max_length=150, unique=True)
     contrasena = models.CharField(max_length=255)
     fecha_registro = models.DateTimeField(auto_now_add=True)
+    reset_code = models.CharField(max_length=4, blank=True, null=True)
 
     def __str__(self):
         return self.nombre
@@ -37,8 +38,6 @@ class PedidoIngrediente(models.Model):
     def __str__(self):
         return f'Ingrediente {self.ingrediente.nombre} en Pedido {self.pedido.id}'
     
-
-
 class Carrito(models.Model):
     carrito_id = models.AutoField(primary_key=True)  # SERIAL PK en PostgreSQL
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)  # SERIAL FK en PostgreSQL
@@ -47,5 +46,3 @@ class Carrito(models.Model):
 
     def __str__(self):
         return f'Carrito {self.carrito_id} del usuario {self.usuario.nombre}'
-
-    

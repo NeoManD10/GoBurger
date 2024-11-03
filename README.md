@@ -12,6 +12,7 @@
 
 - [python or python3](https://www.python.org/)
 - pip
+- [MailHog](https://github.com/mailhog/MailHog)
 
 ## Screenshots
 
@@ -42,6 +43,9 @@ Finally, run the application with
  ```bash
 $ python3 manage.py runserver
 ```
+## Notes
+
+Remember to have MailHog running as it's currently used for mail usage.
 
 ## Creators
 

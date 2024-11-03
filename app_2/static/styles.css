@@ -1,0 +1,98 @@
+/* Estilo general */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+nav {
+    background-color: #ffcc00;
+    padding: 1rem 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+
+.nav-links li {
+    display: inline;
+    margin-left: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.nav-links a:hover {
+    color: #ffbb00;
+}
+
+/* Hero section */
+.hero {
+    text-align: center;
+    background-color: #333;
+    color: white;
+    padding: 3rem 1rem;
+}
+
+.hero .btn {
+    display: inline-block;
+    background-color: #ffcc00;
+    color: #333;
+    padding: 1rem 2rem;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.hero .btn:hover {
+    background-color: #ffbb00;
+    color: #fff;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: #333;
+    color: #fff;
+}
+
+/* Estilos para el historial de pedidos */
+.historial-pedidos {
+    list-style: none;
+    padding: 0;
+}
+
+.historial-pedidos li {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+}
+
+.historial-pedidos li strong {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #333;
+}
+
+.historial-pedidos ul {
+    list-style: none;
+    padding-left: 20px;
+}
+
+.historial-pedidos ul li {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+

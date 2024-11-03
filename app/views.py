@@ -1,7 +1,12 @@
 from django.contrib import messages #Permite mostrar mensajes al usuario, como alertas de éxito o error, que se pueden ver en la plantilla.
+from django.http import HttpResponse
+from django.conf import settings
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect #Render rinde una plantilla HTML y devuelve una respuesta con el contenido HTML, mientras que redirect redirige al usuario a otra URL.
-from .forms import LoginForm, RegisterForm #Formularios personalizados para el inicio de sesión y registro de usuario.
-from .models import Usuario, Ingrediente,HistorialPedido, PedidoIngrediente, HistorialPedido #Modelos de la BDD
+from app.forms import LoginForm, RegisterForm #Formularios personalizados para el inicio de sesión y registro de usuario.
+from app_2.forms import GenerarResetCode, VerificarResetCode, ActualizarContrasena
+from app.models import Usuario, Ingrediente,HistorialPedido, PedidoIngrediente, HistorialPedido #Modelos de la BDD
+import random
 
 def login_view(request):
     if request.method == 'POST':  # Verifica si el formulario fue enviado con el método POST
@@ -78,11 +83,11 @@ def ingredientes_view(request):
     return render(request, 'ingredientes.html', {'ingredientes': ingredientes})  # Rinde la plantilla con la lista de ingredientes
 
 
-
 def logout_view(request):
     if 'usuario_nombre' in request.session:  # Verifica si 'usuario_nombre' está en la sesión
         del request.session['usuario_nombre']  # Elimina 'usuario_nombre' de la sesión
     return redirect('home')  # Redirige a la página principal
+
 
 def seleccionar_ingredientes_view(request):
     ingredientes = Ingrediente.objects.filter(disponible=True)  # Obtiene todos los ingredientes disponibles (filtro `disponible=True`)
@@ -154,7 +159,6 @@ def home_view(request):
     return render(request, 'home.html', context)  # Rinde la plantilla `home.html` con el contexto
 
 
-
 def eliminar_historial_view(request):
     usuario_id = request.session.get('usuario_id')  # Obtiene el ID del usuario de la sesión
     if usuario_id:  # Verifica si el usuario ha iniciado sesión
@@ -163,5 +167,3 @@ def eliminar_historial_view(request):
     else:
         messages.error(request, "Debes iniciar sesión para eliminar tu historial.")  # Muestra un mensaje de error si no hay usuario autenticado
     return redirect('home')  # Redirige a la página de inicio
-
-
