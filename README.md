@@ -13,6 +13,7 @@
 - [python or python3](https://www.python.org/)
 - pip
 - [MailHog](https://github.com/mailhog/MailHog)
+
 ## Screenshots
 
 ![image](https://github.com/user-attachments/assets/046c70e6-054e-4ef5-a9ae-f0b6ac7332bc)

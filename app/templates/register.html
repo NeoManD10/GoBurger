@@ -11,23 +11,23 @@
     <div class="container">
         <!-- Sección izquierda con una imagen -->
         <div class="left-section">
-            <img src="{% static 'img/9343597.jpg' %}" alt="Ilustración" class="illustration">
+            <img src="{% static 'img/9343597.jpg' %}" alt="Ilustración" class="illustration"> <!--link de imagen utilizada ubicada en carpeta static-->
         </div>
 
         <!-- Sección derecha con el formulario de registro -->
         <div class="right-section">
             <div class="form-container">
                 <h2>Registrarse</h2>
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn">Crear Cuenta</button>
+                <form method="POST"> <!--Formulario para enviar los datos de registro -->
+                    {% csrf_token %} <!--Token de seguridad de Django que evita ataques de tipo CSRF (Cross-Site Request Forgery).-->
+                    {{ form.as_p }} <!--Representación del formulario en HTML, generada por Django.-->
+                    <button type="submit" class="btn">Crear Cuenta</button> <!--Botón de envío que permite al usuario crear una cuenta-->
                 </form>
             </div>
         </div>
     </div>
 
-    <footer>
+    <footer> <!--Pie de página para incluir información de derechos de autor.-->
         <p>© 2024 GoyoBurger - Todos los derechos reservados</p>
     </footer>
 </body>

@@ -11,14 +11,14 @@
     <h1>Resumen de tu Pedido</h1>
 
     <ul>
-        {% for ingrediente in ingredientes %}
-            <li>{{ ingrediente.ingrediente.nombre }} - ${{ ingrediente.ingrediente.precio }}</li>
-        {% endfor %}
+        {% for ingrediente in ingredientes %} <!--Inicia un bucle en Django para recorrer todos los ingredientes del pedido.-->
+            <li>{{ ingrediente.ingrediente.nombre }} - ${{ ingrediente.ingrediente.precio }}</li> <!--Muestra el nombre y el precio de cada ingrediente.-->
+        {% endfor %} <!--Finaliza el bucle.-->
     </ul>
 
-    <p>Total del Pedido: ${{ total_precio }}</p> 
+    <p>Total del Pedido: ${{ total_precio }}</p> <!--Muestra el total acumulado del pedido, pasado como total_precio desde la vista de Django. Representa la suma de los precios de todos los ingredientes seleccionados.-->
 
-    <div class="buttons">
+    <div class="buttons"> <!--Contenedor para organizar los botones.-->
         <a href="{% url 'ingredientes' %}" class="btn">Seguir comprando</a>
         <a href="{% url 'home' %}" class="btn">Volver al inicio</a>
     </div>

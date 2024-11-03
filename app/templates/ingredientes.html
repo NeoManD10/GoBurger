@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selecciona Ingredientes</title>
-    <link rel="stylesheet" href="{% static 'ingredientes.css' %}"> <!-- Aquí va link al CSS de ingredientes -->
+    <link rel="stylesheet" href="{% static 'ingredientes.css' %}">
 </head>
 <body>
     <form method="POST">
@@ -14,10 +14,14 @@
             <h1>Selecciona los Ingredientes</h1>
             <ul class="ingredientes-list">
                 {% for ingrediente in ingredientes %}
-                    <li>
-                        <input type="checkbox" name="ingredientes" value="{{ ingrediente.id }}" class="ingredient-checkbox"
-                            data-precio="{{ ingrediente.precio }}"> 
-                        {{ ingrediente.nombre }} ({{ ingrediente.tipo }}) - ${{ ingrediente.precio }}
+                    <li class="ingrediente-item">
+                        <label>
+                            <input type="checkbox" name="ingredientes" value="{{ ingrediente.id }}" class="ingredient-checkbox" data-precio="{{ ingrediente.precio }}"> 
+                            <div class="ingredient-info">
+                                <span class="ingrediente-nombre">{{ ingrediente.nombre }} ({{ ingrediente.tipo }})</span>
+                                <span class="ingrediente-precio">- ${{ ingrediente.precio }}</span>
+                            </div>
+                        </label>
                     </li>
                 {% endfor %}
             </ul>
@@ -30,8 +34,8 @@
 
     <script>
         // JavaScript para calcular el total de ingredientes seleccionados y limitar a 4 ingredientes.
-        const checkboxes = document.querySelectorAll('.ingredient-checkbox');
-        const totalPrecioElement = document.getElementById('totalPrecio');
+        const checkboxes = document.querySelectorAll('.ingredient-checkbox'); //Selecciona todos los elementos de tipo checkbox que tienen la clase ingredient-checkbox en la página. Esto crea una lista de todos los checkbox que representan ingredientes.
+        const totalPrecioElement = document.getElementById('totalPrecio');    //const checkboxes: Guarda la lista de checkbox en la constante checkboxes, para poder recorrer cada checkbox más adelante.
         let total = 0;
         let selectedCount = 0;
 
@@ -44,7 +48,7 @@
                         this.checked = false;
                         return;
                     }
-                    total += precio;
+                    total += precio; //Si el ingrediente fue marcado y no se excedió el límite, agrega el precio del ingrediente al total.
                     selectedCount++;
                 } else {
                     total -= precio;
