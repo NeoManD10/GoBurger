@@ -10,7 +10,7 @@
 <body>
     <nav>
         <ul class="nav-links">
-            {% if request.session.usuario_nombre %}
+            {% if request.session.usuario_nombre %} <!--Verifica si el usuario ha iniciado sesión consultando la variable de sesión usuario_nombre.-->
                 <li>Bienvenido, {{ request.session.usuario_nombre }}</li>
                 <li><a href="{% url 'logout' %}">Cerrar Sesión</a></li>
             {% else %}
@@ -38,15 +38,15 @@
     </ul>
     {% endif %}
 
-    {% if request.session.usuario_nombre %}
+    {% if request.session.usuario_nombre %} <!--Verifica si el usuario ha iniciado sesión consultando la variable de sesión usuario_nombre.-->
 
-        <button id="mostrar-historial" class="btn">Mostrar Historial de Pedidos</button>
+        <button id="mostrar-historial" class="btn">Mostrar Historial de Pedidos</button> <!--boton para ocultar o mostrar historial de pedidos-->
         <a href="{% url 'eliminar_historial' %}" onclick="return confirm('¿Estás seguro de que deseas eliminar tu historial de pedidos?');" class="btn">
             Eliminar Historial de Pedidos
         </a>
 
-        <div id="historial-pedidos" style="display:none;">
-            {% if historial_completo %}
+        <div id="historial-pedidos" style="display:none;"> <!--Contenedor oculto (con display: none;) que mostrará el historial de pedidos.-->
+            {% if historial_completo %} <!--Verifica si el historial tiene pedidos. Muestra cada pedido con la fecha de realización y lista de ingredientes.-->
                 <h2>Historial de tus Pedidos</h2>
                 <ul class="historial-pedidos">
                     {% for pedido in historial_completo %}
@@ -69,13 +69,13 @@
         <script>
             // Mostrar el historial cuando se presiona el botón
             document.getElementById('mostrar-historial').addEventListener('click', function() {
-                var historialDiv = document.getElementById('historial-pedidos');
-                if (historialDiv.style.display === "none") {
-                    historialDiv.style.display = "block";
-                    this.textContent = "Ocultar Historial de Pedidos";
-                } else {
-                    historialDiv.style.display = "none";
-                    this.textContent = "Mostrar Historial de Pedidos";
+                var historialDiv = document.getElementById('historial-pedidos'); //Selecciona el contenedor del historial.
+                if (historialDiv.style.display === "none") { //Verifica si el historial está oculto.
+                    historialDiv.style.display = "block"; //muestra el historial si esta oculto
+                    this.textContent = "Ocultar Historial de Pedidos"; //Cambia el texto del botón a "Ocultar".
+                } else { //si esta visible
+                    historialDiv.style.display = "none"; // Oculta el historial
+                    this.textContent = "Mostrar Historial de Pedidos"; //Cambia el texto del botón a "Mostrar".
                 }
             });
         </script>

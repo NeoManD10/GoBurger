@@ -1,11 +1,11 @@
 <h1>Historial de Pedidos</h1>
 
-<ul>
-    {% for pedido in historial_pedidos %}
-        <li>
+<ul> <!--Se crea una lista no ordenada para contener cada pedido.-->
+    {% for pedido in historial_pedidos %} <!-- Se utiliza un bucle en para recorrer cada pedido en la variable historial_pedidos-->
+        <li> <!--Cada pedido se representa como un elemento de lista.-->
             Pedido realizado el {{ pedido.fecha_pedido }} - Total: ${{ pedido.calcular_total }}
             <ul>
-                {% for item in pedido.pedidoingrediente_set.all %}
+                {% for item in pedido.pedidoingrediente_set.all %} <!--Se utiliza otro bucle en para recorrer todos los ingredientes de cada pedido-->
                     <li>{{ item.ingrediente.nombre }} - ${{ item.ingrediente.precio }}</li>
                 {% endfor %}
             </ul>

@@ -1,6 +1,6 @@
 body {
     font-family: 'Poppins', sans-serif;
-    background: #ffffff; /* Fondo blanco */
+    background: #ffffff;
     margin: 0;
     padding: 0;
     display: flex;
@@ -11,14 +11,14 @@ body {
 
 h1 {
     text-align: center;
-    color: #000000; /* Texto en negro */
+    color: #000000;
     margin-bottom: 20px;
     font-size: 32px;
     font-weight: bold;
 }
 
 .ingredientes-section {
-    background-color: #f8f8f8; /* Fondo gris claro para la sección de ingredientes */
+    background-color: #f8f8f8;
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
@@ -26,7 +26,10 @@ h1 {
     width: 100%;
 }
 
+/* Distribuir en columnas */
 .ingredientes-list {
+    column-count: 2; /* Número de columnas */
+    column-gap: 20px; /* Espacio entre columnas */
     list-style-type: none;
     padding: 0;
     margin: 0;
@@ -34,43 +37,41 @@ h1 {
 
 .ingrediente-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background-color: #fff; /* Fondo blanco para cada ingrediente */
-    padding: 15px;
-    border-radius: 12px;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 2px solid #ddd;
+    border-radius: 8px;
     margin-bottom: 10px;
-    transition: transform 0.2s ease-in-out;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    cursor: pointer;
+    break-inside: avoid; /* Evita dividir el elemento entre columnas */
 }
 
 .ingrediente-item:hover {
-    transform: scale(1.03);
-    background-color: #ffcc00; /* Efecto hover gris claro */
+    transform: scale(1.05);
+    background-color: #fef7e7;
 }
 
-.ingrediente-img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-right: 20px;
+.ingredient-checkbox {
+    margin-right: 10px;
+    transform: scale(1.2);
 }
 
 .ingredient-info {
-    flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
 
-.ingredient-info span {
-    font-size: 18px;
-    font-weight: 600;
-    color: #000000; /* Texto de ingredientes en negro */
+.ingrediente-nombre {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000000;
 }
 
-.ingredient-checkbox {
-    margin-left: 20px;
-    transform: scale(1.2);
+.ingrediente-precio {
+    font-size: 14px;
+    color: #555555;
 }
 
 p {
@@ -78,12 +79,12 @@ p {
     font-size: 18px;
     font-weight: bold;
     margin-top: 20px;
-    color: #000000; /* Texto del total en amarillo */
+    color: #000000;
 }
 
 button {
-    background-color: #ffcc00; /* Botón en amarillo */
-    color: #000000; /* Texto del botón en negro */
+    background-color: #ffcc00;
+    color: #000000;
     padding: 12px 25px;
     font-size: 16px;
     border: none;
@@ -95,5 +96,12 @@ button {
 }
 
 button:hover {
-    background-color: #e6b800; /* Efecto hover en amarillo más oscuro */
+    background-color: #e6b800;
+}
+
+/* Ajuste para pantallas grandes, aumenta a 3 columnas */
+@media (min-width: 1200px) {
+    .ingredientes-list {
+        column-count: 3;
+    }
 }
