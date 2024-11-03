@@ -16,7 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.views import login_view, home, ingredientes_view, register_view, logout_view, historial_view,carrito_view, generar_reset_code_view, verificar_reset_code_view, actualizar_contrasena_view
+from app.views import login_view, home, ingredientes_view, register_view, logout_view, historial_view,carrito_view
+from app_2.views import generar_reset_code_view, verificar_reset_code_view, actualizar_contrasena_view
 # Cambia 'app' al nombre correcto de tu aplicación
 
 urlpatterns = [
