@@ -41,44 +41,6 @@ def home(request):
             'historial_completo': None
         })
 
-
-def ingredientes_view(request):
-    ingredientes = Ingrediente.objects.all()  # Obtener todos los ingredientes
-    usuario_id = request.session.get('usuario_id')  # Obtener el ID del usuario de la sesión
-
-    if request.method == 'POST':
-        # Obtener los ingredientes seleccionados del formulario
-        ingredientes_ids = request.POST.getlist('ingredientes')
-        
-        if len(ingredientes_ids) > 4:
-            messages.error(request, "Solo puedes seleccionar hasta 4 ingredientes.")
-            return render(request, 'ingredientes.html', {'ingredientes': ingredientes})
-
-        if not usuario_id:
-            messages.error(request, "Debes iniciar sesión para hacer un pedido.")
-            return redirect('login')
-        
-        # Crear un nuevo historial de pedido
-        usuario = Usuario.objects.get(id=usuario_id)
-        historial_pedido = HistorialPedido.objects.create(usuario=usuario)
-        
-        total_precio = 0
-        
-        # Guardar los ingredientes seleccionados en el pedido
-        for ingrediente_id in ingredientes_ids:
-            ingrediente = Ingrediente.objects.get(id=ingrediente_id)
-            PedidoIngrediente.objects.create(pedido=historial_pedido, ingrediente=ingrediente)
-            total_precio += ingrediente.precio
-
-        # Guardar el total del pedido en la sesión para mostrarlo después
-        request.session['pedido_total'] = total_precio
-
-        messages.success(request, "Pedido realizado con éxito.")
-        return redirect('carrito')  # Redirigir a la vista del carrito de compras
-
-    return render(request, 'ingredientes.html', {'ingredientes': ingredientes})
-
-
 def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
