@@ -8,31 +8,33 @@
     <link rel="stylesheet" href="{% static 'carrito.css' %}">
 </head>
 <body>
-    <h1>Resumen de tu Pedido</h1>
+    <div class="container">
+        <h1>Resumen de tu Pedido</h1>
 
-    <ul>
-        {% for ingrediente in ingredientes %} <!--Inicia un bucle en Django para recorrer todos los ingredientes del pedido.-->
-            <li>{{ ingrediente.ingrediente.nombre }} - ${{ ingrediente.ingrediente.precio }}</li> <!--Muestra el nombre y el precio de cada ingrediente.-->
-        {% endfor %} <!--Finaliza el bucle.-->
-    </ul>
+        <div class="pedido">
+            <ul class="ingredientes-lista">
+                {% for ingrediente in ingredientes %}
+                    <li class="ingrediente-item">
+                        <span class="ingrediente-nombre">{{ ingrediente.ingrediente.nombre }}</span>
+                        <span class="ingrediente-precio">${{ ingrediente.ingrediente.precio }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+            <p class="total">Total del Pedido: <strong>${{ total_precio }}</strong></p>
+        </div>
 
-    <p>Total del Pedido: ${{ total_precio }}</p> <!--Muestra el total acumulado del pedido, pasado como total_precio desde la vista de Django. Representa la suma de los precios de todos los ingredientes seleccionados.-->
+        <div class="buttons">
+            <a href="{% url 'ingredientes' %}" class="btn">Seguir comprando</a>
+            <a href="{% url 'home' %}" class="btn">Volver al inicio</a>
+        </div>
 
-    <div class="buttons"> <!--Contenedor para organizar los botones.-->
-        <a href="{% url 'ingredientes' %}" class="btn">Seguir comprando</a>
-        <a href="{% url 'home' %}" class="btn">Volver al inicio</a>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <p class="message {{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
-
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
 </body>
 </html>
-
-
-
-
