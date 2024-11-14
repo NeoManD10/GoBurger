@@ -3,9 +3,8 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
-from app.forms import LoginForm, RegisterForm
 from app_2.forms import GenerarResetCode, VerificarResetCode, ActualizarContrasena
-from app.models import Usuario, Ingrediente,HistorialPedido, PedidoIngrediente, HistorialPedido
+from app.models import Usuario
 import random
 
 def generar_reset_code_view(request): # Genera el codigo que el usuario usa para recuperar la contraseña

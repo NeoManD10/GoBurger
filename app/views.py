@@ -1,11 +1,13 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages #Permite mostrar mensajes al usuario, como alertas de éxito o error, que se pueden ver en la plantilla.
 from django.http import HttpResponse
 from django.conf import settings
-from django.core.mail import send_mail
 from django.shortcuts import render, redirect #Render rinde una plantilla HTML y devuelve una respuesta con el contenido HTML, mientras que redirect redirige al usuario a otra URL.
 from app.forms import LoginForm, RegisterForm #Formularios personalizados para el inicio de sesión y registro de usuario.
-from app_2.forms import GenerarResetCode, VerificarResetCode, ActualizarContrasena
 from app.models import Usuario, Ingrediente,HistorialPedido, PedidoIngrediente, HistorialPedido #Modelos de la BDD
+from reportlab.lib.pagesizes import letter # type: ignore
+from reportlab.pdfgen import canvas # type: ignore
+from datetime import datetime
 import random
 
 def login_view(request):
@@ -61,10 +63,15 @@ def register_view(request):
 
 
 def ingredientes_view(request):
+      
+
     ingredientes = Ingrediente.objects.all()  # Obtiene todos los ingredientes disponibles
 
     if request.method == 'POST':  # Verifica si el formulario fue enviado con el método POST
         ingredientes_ids = request.POST.getlist('ingredientes')  # Obtiene los IDs de los ingredientes seleccionados
+
+        if not ingredientes_ids:  # Verifica si no se seleccionaron ingredientes
+            return redirect('ingredientes')  # Redirige a la misma página de selección de ingredientes
 
         usuario_id = request.session.get('usuario_id')  # Obtiene el ID del usuario desde la sesión
         if not usuario_id:  # Si el usuario no ha iniciado sesión
@@ -107,6 +114,7 @@ def seleccionar_ingredientes_view(request):
             precio_total += ingrediente.precio  # Suma el precio del ingrediente al total
 
         request.session['precio_total'] = precio_total  # Guarda el precio total en la sesión
+
         return redirect('resumen_pedido')  # Redirige a la vista de resumen del pedido
 
     return render(request, 'ingredientes.html', {'ingredientes': ingredientes})  # Rinde la plantilla de selección de ingredientes
@@ -157,5 +165,43 @@ def home_view(request):
         context = {}  # Si no hay usuario autenticado, el contexto está vacío
 
     return render(request, 'home.html', context)  # Rinde la plantilla `home.html` con el contexto
+
+def generar_boleta_pdf(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        messages.error(request, "Debes iniciar sesión para generar la boleta.")
+        return redirect('login')
+
+    # Obtén el último pedido del usuario
+    historial_pedido = HistorialPedido.objects.filter(usuario_id=usuario_id).last()
+    ingredientes = PedidoIngrediente.objects.filter(pedido=historial_pedido)
+    total_precio = sum([ingrediente.ingrediente.precio for ingrediente in ingredientes])
+
+    # Configura la respuesta HTTP para el PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="boleta.pdf"'
+
+    # Crea el PDF
+    p = canvas.Canvas(response, pagesize=letter)
+    p.setFont("Helvetica", 12)
+
+    # Agrega título y fecha/hora
+    p.drawString(100, 750, "Boleta de Compra - GoyoBurger")
+    p.drawString(100, 730, f"Fecha y Hora: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+    # Detalles del pedido
+    y_position = 700
+    for ingrediente in ingredientes:
+        p.drawString(100, y_position, f"{ingrediente.ingrediente.nombre} - ${ingrediente.ingrediente.precio}")
+        y_position -= 20
+
+    # Total
+    p.drawString(100, y_position - 20, f"Total del Pedido: ${total_precio}")
+
+    # Guarda el PDF
+    p.showPage()
+    p.save()
+
+    return response
 
 
