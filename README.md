@@ -21,7 +21,7 @@
 ## Installation
 
 ### linux/Mac OS
-Create a folder called for example: `GoyoBurger`
+Create a folder called for example, `GoyoBurger`.
 Once inside this folder open the terminal and write the command
 ```bash
 $ git clone https://github.com/NeoManD10/GoBurger.git
