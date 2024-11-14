@@ -45,7 +45,7 @@ $ python3 manage.py runserver
 ```
 
 ### Windows
-   Create a folder where you want to clone the repository, for example, `GoyoBurger`. Then, open the command terminal (CMD or PowerShell) and run:
+   Create a folder where you want to clone the repository, for example, `GoyoBurger`. Then, open the command terminal (CMD or PowerShell) and run
 ```bash
 $ git clone https://github.com/NeoManD10/GoBurger.git
 $ cd GoBurger
