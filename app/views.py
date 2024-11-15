@@ -61,7 +61,7 @@ def register_view(request):
 
     return render(request, 'register.html', {'form': form})  # Rinde la plantilla de registro con el formulario
 
-
+@login_required
 def ingredientes_view(request):
       
 
@@ -119,7 +119,7 @@ def seleccionar_ingredientes_view(request):
 
     return render(request, 'ingredientes.html', {'ingredientes': ingredientes})  # Rinde la plantilla de selección de ingredientes
 
-
+@login_required
 def historial_view(request):
     usuario_id = request.session.get('usuario_id')  # Obtiene el ID del usuario desde la sesión
     if not usuario_id:  # Si el usuario no ha iniciado sesión

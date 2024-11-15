@@ -23,7 +23,11 @@
     <section class="hero">
         <h1>Bienvenido a GoyoBurger</h1>
         <p>Personaliza tu hamburguesa con los mejores ingredientes</p>
+        {% if request.session.usuario_nombre %} <!--Verifica si el usuario ha iniciado sesión consultando la variable de sesión usuario_nombre.-->
         <a href="{% url 'ingredientes' %}" class="btn">Explorar Ingredientes</a>
+        {% else %}
+        <p>Inicia sesión para poder hacer un pedido.</p>
+        {% endif %}
     </section>
 
     <footer>
