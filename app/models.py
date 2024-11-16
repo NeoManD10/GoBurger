@@ -13,6 +13,7 @@ class Ingrediente(models.Model):
     nombre = models.CharField(max_length=100)
     tipo = models.CharField(max_length=50)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
+    cantidad = models.PositiveIntegerField(default=0)
     disponible = models.BooleanField(default=True)
 
     def __str__(self):

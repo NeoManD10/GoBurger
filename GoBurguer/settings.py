@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'GoBurguer.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'GoyoBurguer',
+        'NAME': 'goyoburguer',
         'USER': 'postgres',
         'PASSWORD': 'kali',
         'HOST': 'localhost',
