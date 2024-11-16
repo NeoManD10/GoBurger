@@ -95,30 +95,6 @@ def logout_view(request):
         del request.session['usuario_nombre']  # Elimina 'usuario_nombre' de la sesión
     return redirect('home')  # Redirige a la página principal
 
-
-def seleccionar_ingredientes_view(request):
-    ingredientes = Ingrediente.objects.filter(disponible=True)  # Obtiene todos los ingredientes disponibles (filtro `disponible=True`)
-
-    if request.method == 'POST':  # Verifica si el formulario fue enviado con el método POST
-        usuario_id = request.session.get('usuario_id')  # Obtiene el ID del usuario desde la sesión
-        if not usuario_id:  # Si el usuario no ha iniciado sesión
-            return redirect('login')  # Redirige a la página de inicio de sesión
-
-        pedido = HistorialPedido.objects.create(usuario_id=usuario_id)  # Crea un nuevo historial de pedido para el usuario
-        ingredientes_seleccionados = request.POST.getlist('ingredientes')  # Obtiene los IDs de los ingredientes seleccionados
-        precio_total = 0  # Variable para calcular el precio total del pedido
-
-        for ingrediente_id in ingredientes_seleccionados:  # Itera sobre los IDs de ingredientes seleccionados
-            ingrediente = Ingrediente.objects.get(id=ingrediente_id)  # Obtiene cada ingrediente por su ID
-            PedidoIngrediente.objects.create(pedido=pedido, ingrediente=ingrediente)  # Crea un registro en PedidoIngrediente
-            precio_total += ingrediente.precio  # Suma el precio del ingrediente al total
-
-        request.session['precio_total'] = precio_total  # Guarda el precio total en la sesión
-
-        return redirect('resumen_pedido')  # Redirige a la vista de resumen del pedido
-
-    return render(request, 'ingredientes.html', {'ingredientes': ingredientes})  # Rinde la plantilla de selección de ingredientes
-
 @login_required
 def historial_view(request):
     usuario_id = request.session.get('usuario_id')  # Obtiene el ID del usuario desde la sesión
@@ -141,30 +117,6 @@ def carrito_view(request):
         'ingredientes': ingredientes,  # Pasa la lista de ingredientes a la plantilla
         'total_precio': total_precio  # Pasa el total del pedido a la plantilla
     })
-
-def home_view(request):
-    if 'usuario_id' in request.session:  # Verifica si el usuario ha iniciado sesión
-        usuario_id = request.session['usuario_id']  # Obtiene el ID del usuario de la sesión
-        historial_completo = []  # Lista para almacenar cada pedido con sus ingredientes y total
-
-        pedidos = HistorialPedido.objects.filter(usuario_id=usuario_id)  # Obtiene todos los pedidos del usuario
-
-        for pedido in pedidos:  # Itera sobre cada pedido
-            ingredientes = pedido.pedidoingrediente_set.all()  # Obtiene los ingredientes relacionados con el pedido
-            total_precio = pedido.calcular_total()  # Llama a la función para calcular el total del pedido
-            historial_completo.append({
-                'pedido': pedido,
-                'ingredientes': ingredientes,
-                'total_precio': total_precio
-            })  # Agrega el pedido y sus detalles a la lista
-
-        context = {
-            'historial_completo': historial_completo  # Pasa el historial completo a la plantilla
-        }
-    else:
-        context = {}  # Si no hay usuario autenticado, el contexto está vacío
-
-    return render(request, 'home.html', context)  # Rinde la plantilla `home.html` con el contexto
 
 def generar_boleta_pdf(request):
     usuario_id = request.session.get('usuario_id')
@@ -204,4 +156,6 @@ def generar_boleta_pdf(request):
 
     return response
 
+def about_us_view(request):
+    return render(request, 'about_us.html')
 
