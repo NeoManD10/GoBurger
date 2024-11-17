@@ -14,13 +14,13 @@
         {% if carrito.pedidos_guardados.all %}
         <ul class="pedido-lista">
             {% for pedido in pedidos %}
-                    {% ifchanged pedido.pedido.id %}
-                    <h1> Pedido N°{{forloop.counter}} </h1>
-                    {% endifchanged %}
-                    <li class="ingredientes-lista">
-                        <span class="ingrediente-nombre">{{ pedido.ingrediente.nombre }}</span> -
-                        <span class="ingrediente-precio">${{ pedido.ingrediente.precio }}</span>
-                    </li>
+                {% ifchanged pedido.pedido.id %}
+                    <h1>Pedido N°<span class="pedido-numero">{{ forloop.counter }}</span></h1>
+                {% endifchanged %}
+                <li class="ingredientes-lista">
+                    <span class="ingrediente-nombre">{{ pedido.ingrediente.nombre }}</span> -
+                    <span class="ingrediente-precio">${{ pedido.ingrediente.precio }}</span>
+                </li>
             {% endfor %}
         </ul>
         {% else %}
@@ -43,5 +43,18 @@
             <button type="submit">Volver a inicio</button>
         </form>
     </div>
+
+    <script>
+        // JavaScript para incrementar el número de pedidos en la sesión actual
+        document.addEventListener("DOMContentLoaded", function() {
+            const pedidoNumeroElements = document.querySelectorAll(".pedido-numero");
+            let contador = 1;
+            
+            pedidoNumeroElements.forEach(function(element) {
+                element.textContent = contador++;
+            });
+        });
+    </script>
+
 </body>
 </html>

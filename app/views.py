@@ -47,32 +47,6 @@ def home(request):
             'historial_completo': None  # Si no hay usuario autenticado, no muestra el historial
         })
 
-
-def home_view(request):
-    if 'usuario_id' in request.session:  # Verifica si el usuario ha iniciado sesión
-        usuario_id = request.session['usuario_id']  # Obtiene el ID del usuario de la sesión
-        historial_completo = []  # Lista para almacenar cada pedido con sus ingredientes y total
-
-        pedidos = HistorialPedido.objects.filter(usuario_id=usuario_id, activo=False)  # Obtiene todos los pedidos del usuario
-
-        for pedido in pedidos:  # Itera sobre cada pedido
-            ingredientes = pedido.pedidoingrediente_set.all()  # Obtiene los ingredientes relacionados con el pedido
-            total_precio = pedido.calcular_total()  # Llama a la función para calcular el total del pedido
-            historial_completo.append({
-                'pedido': pedido,
-                'ingredientes': ingredientes,
-                'total_precio': total_precio
-            })  # Agrega el pedido y sus detalles a la lista
-
-        context = {
-            'historial_completo': historial_completo  # Pasa el historial completo a la plantilla
-        }
-    else:
-        context = {}  # Si no hay usuario autenticado, el contexto está vacío
-
-    return render(request, 'home.html', context)  # Rinde la plantilla `home.html` con el contexto
-
-
 def register_view(request):
     if request.method == 'POST':  # Verifica si el formulario fue enviado con el método POST
         form = RegisterForm(request.POST)  # Crea una instancia de RegisterForm con los datos del formulario
@@ -111,10 +85,9 @@ def ingredientes_view(request):
         for ingrediente_id in ingredientes_ids:  # Itera sobre los IDs de ingredientes seleccionados
             ingrediente = Ingrediente.objects.get(id=ingrediente_id)  # Obtiene cada ingrediente por su ID
             PedidoIngrediente.objects.create(pedido=historial_pedido, ingrediente=ingrediente)  # Crea un registro en PedidoIngrediente para asociar el ingrediente al pedido
-
-        messages.success(request, "Pedido realizado con éxito.")  # Muestra un mensaje de éxito
         pedido_ingredientes = PedidoIngrediente.objects.filter(pedido=historial_pedido)
         carrito = get_or_create_carrito(request)
+
         for pedido_ingrediente in pedido_ingredientes:
             anadir_a_carrito_view(request, pedido_ingrediente)
         carrito.save()
@@ -196,14 +169,15 @@ def generar_boleta_pdf(request):
         return redirect('carrito')
     for pedido in pedidos:
         if y_position < 100:
-            p.showPage()  # Start a new page if we're near the bottom
+            p.showPage()  # Crea nueva página
             p.setFont("Helvetica-Bold", 14)
-            y_position = 750  # Reset position to the top of the new page
+            y_position = 750  # Devuelve la impresión al inicio de la página
             p.drawString(100, y_position, "Boleta de Compra - GoyoBurger")
             p.drawString(100, y_position - 20, f"Fecha y Hora: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-            y_position -= 60  # Add space for the header
+            y_position -= 60  # Espacio para separar
 
         if(anterior_id != pedido.pedido.id):
+            contador += 1
             p.setFont("Helvetica-Bold", 12)
             p.drawString(100, y_position, f"Pedido N°{n_pedido}")
             y_position -= 20
@@ -213,7 +187,7 @@ def generar_boleta_pdf(request):
         y_position -= 20
         costo_total += pedido.ingrediente.precio
         anterior_id = pedido.pedido.id
-        contador += 1
+
     # Total
     p.setFont("Helvetica-Bold", 16)
     p.drawString(100, y_position - 20, f"Total del Pedido: ${costo_total}")
@@ -221,7 +195,6 @@ def generar_boleta_pdf(request):
     for x in range(contador):
         historial_pedido = HistorialPedido.objects.create(usuario_id=usuario_id, activo=False)
         for pedido_ingrediente in carrito.pedidos_guardados.all():
-            # Set the 'pedido' field of each PedidoIngrediente to the new HistorialPedido
             pedido_ingrediente.pedido = historial_pedido
             pedido_ingrediente.save()
 
