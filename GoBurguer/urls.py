@@ -34,4 +34,7 @@ urlpatterns = [
     path('actualizar-contrasena/', actualizar_contrasena_view, name='actualizar-contrasena'),
     path('generar-boleta/',generar_boleta_pdf, name='generar-boleta'),
     path('acerca-de-nosotros/',about_us_view, name='about_us'),
+    path('añadir-a-carrito/',anadir_a_carrito_view,name='añadir_a_carrito'),
+    path('get-or-create-carrito/',get_or_create_carrito,name='get_or_create_carrito'),
+
 ]

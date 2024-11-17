@@ -123,29 +123,6 @@ def ingredientes_view(request):
     return render(request, 'ingredientes.html', {'ingredientes': ingredientes})  # Rinde la plantilla con la lista de ingredientes
 
 
-def seleccionar_ingredientes_view(request):
-    ingredientes = Ingrediente.objects.filter(disponible=True)  # Obtiene todos los ingredientes disponibles (filtro `disponible=True`)
-
-    if request.method == 'POST':  # Verifica si el formulario fue enviado con el método POST
-        usuario_id = request.session.get('usuario_id')  # Obtiene el ID del usuario desde la sesión
-        if not usuario_id:  # Si el usuario no ha iniciado sesión
-            return redirect('login')  # Redirige a la página de inicio de sesión
-
-        pedido = HistorialPedido.objects.create(usuario_id=usuario_id)  # Crea un nuevo historial de pedido para el usuario
-        ingredientes_seleccionados = request.POST.getlist('ingredientes')  # Obtiene los IDs de los ingredientes seleccionados
-        precio_total = 0  # Variable para calcular el precio total del pedido
-
-        for ingrediente_id in ingredientes_seleccionados:  # Itera sobre los IDs de ingredientes seleccionados
-            ingrediente = Ingrediente.objects.get(id=ingrediente_id)  # Obtiene cada ingrediente por su ID
-            PedidoIngrediente.objects.create(pedido=pedido, ingrediente=ingrediente)  # Crea un registro en PedidoIngrediente
-            precio_total += ingrediente.precio  # Suma el precio del ingrediente al total
-
-        request.session['precio_total'] = precio_total  # Guarda el precio total en la sesión
-        return redirect('carrito')  # Redirige a la vista de resumen del pedido
-
-    return render(request, 'ingredientes.html', {'ingredientes': ingredientes})  # Rinde la plantilla de selección de ingredientes
-
-
 def logout_view(request):
     if 'usuario_nombre' in request.session:  # Verifica si 'usuario_nombre' está en la sesión
         del request.session['usuario_nombre']  # Elimina 'usuario_nombre' de la sesión
@@ -257,5 +234,3 @@ def generar_boleta_pdf(request):
 def about_us_view(request):
     return render(request, 'about_us.html')
 
-def about_us_view(request):
-    return render(request, 'about_us.html')
