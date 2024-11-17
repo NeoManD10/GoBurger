@@ -22,7 +22,7 @@ class Ingrediente(models.Model):
 class HistorialPedido(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     fecha_pedido = models.DateTimeField(auto_now_add=True)
-
+    activo = models.BooleanField(default=True)
     def calcular_total(self):
         total = sum(item.ingrediente.precio for item in self.pedidoingrediente_set.all())
         return total

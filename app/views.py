@@ -32,7 +32,7 @@ def login_view(request):
 def home(request):
     if 'usuario_id' in request.session:  # Verifica si el usuario ha iniciado sesión (ID del usuario en la sesión)
         usuario_id = request.session['usuario_id']  # Obtiene el ID del usuario de la sesión
-        historial_completo = HistorialPedido.objects.filter(usuario_id=usuario_id).select_related('usuario')  # Obtiene el historial de pedidos para el usuario
+        historial_completo = HistorialPedido.objects.filter(usuario_id=usuario_id, activo=False).select_related('usuario')  # Obtiene el historial de pedidos para el usuario
         pedidos_con_ingredientes = []  # Lista para almacenar pedidos con sus ingredientes
 
         for pedido in historial_completo:  # Itera sobre cada pedido en el historial
@@ -53,7 +53,7 @@ def home_view(request):
         usuario_id = request.session['usuario_id']  # Obtiene el ID del usuario de la sesión
         historial_completo = []  # Lista para almacenar cada pedido con sus ingredientes y total
 
-        pedidos = HistorialPedido.objects.filter(usuario_id=usuario_id)  # Obtiene todos los pedidos del usuario
+        pedidos = HistorialPedido.objects.filter(usuario_id=usuario_id, activo=False)  # Obtiene todos los pedidos del usuario
 
         for pedido in pedidos:  # Itera sobre cada pedido
             ingredientes = pedido.pedidoingrediente_set.all()  # Obtiene los ingredientes relacionados con el pedido
@@ -152,7 +152,7 @@ def historial_view(request):
         messages.error(request, "Debes iniciar sesión para ver tu historial.")  # Muestra un mensaje de error
         return redirect('login')  # Redirige a la página de inicio de sesión
 
-    historial_pedidos = HistorialPedido.objects.filter(usuario_id=usuario_id)  # Obtiene el historial de pedidos del usuario
+    historial_pedidos = HistorialPedido.objects.filter(activo=False, usuario_id=usuario_id)  # Obtiene el historial de pedidos del usuario
     return render(request, 'historial.html', {'historial_pedidos': historial_pedidos})  # Rinde la plantilla del historial
 
 
@@ -208,6 +208,7 @@ def generar_boleta_pdf(request):
     y_position = 700
     anterior_id = -1
     n_pedido = 1
+    contador = 0
     if not carrito.pedidos_guardados.exists():
         return redirect('carrito')
     for pedido in pedidos:
@@ -229,10 +230,17 @@ def generar_boleta_pdf(request):
         y_position -= 20
         costo_total += pedido.ingrediente.precio
         anterior_id = pedido.pedido.id
-
+        contador += 1
     # Total
     p.setFont("Helvetica-Bold", 16)
     p.drawString(100, y_position - 20, f"Total del Pedido: ${costo_total}")
+    anterior_id = -1
+    for x in range(contador):
+        historial_pedido = HistorialPedido.objects.create(usuario_id=usuario_id, activo=False)
+        for pedido_ingrediente in carrito.pedidos_guardados.all():
+            # Set the 'pedido' field of each PedidoIngrediente to the new HistorialPedido
+            pedido_ingrediente.pedido = historial_pedido
+            pedido_ingrediente.save()
 
     # Guarda el PDF
     p.showPage()
