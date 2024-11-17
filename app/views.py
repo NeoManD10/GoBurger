@@ -254,6 +254,8 @@ def generar_boleta_pdf(request):
     carrito.pedidos_guardados.clear()
     return response
 
+def about_us_view(request):
+    return render(request, 'about_us.html')
 
 def about_us_view(request):
     return render(request, 'about_us.html')
