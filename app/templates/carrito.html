@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'carrito.css' %}">
 </head>
 <body>
+
     <div class="container">
         <h1>Tu carrito</h1>
         {% if carrito.pedidos_guardados.all %}
@@ -26,7 +27,21 @@
         <p>No hay ingredientes en tu carrito.</p>
         {% endif %}
         <h2>Costo Total: ${{ costo_total }} </h2>
-        <button type="submit">Confirmar Pedido</button>
+        <form method="POST" action="{% url 'generar-boleta' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Confirmar Pedido</button>
+        </form>
+        <form action="{% url 'ingredientes' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Continuar comprando</button>
+        </form>
+        <form action="{% url 'home' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Volver a inicio</button>
+        </form>
     </div>
 </body>
 </html>

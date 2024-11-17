@@ -187,11 +187,9 @@ def generar_boleta_pdf(request):
     if not usuario_id:
         messages.error(request, "Debes iniciar sesión para generar la boleta.")
         return redirect('login')
-
-    # Obtén el último pedido del usuario
-    historial_pedido = HistorialPedido.objects.filter(usuario_id=usuario_id).last()
-    ingredientes = PedidoIngrediente.objects.filter(pedido=historial_pedido)
-    total_precio = sum([ingrediente.ingrediente.precio for ingrediente in ingredientes])
+    carrito = get_or_create_carrito(request)
+    pedidos = carrito.pedidos_guardados.all()
+    costo_total = 0
 
     # Configura la respuesta HTTP para el PDF
     response = HttpResponse(content_type='application/pdf')
@@ -202,17 +200,37 @@ def generar_boleta_pdf(request):
     p.setFont("Helvetica", 12)
 
     # Agrega título y fecha/hora
+    p.setFont("Helvetica-Bold", 14)
     p.drawString(100, 750, "Boleta de Compra - GoyoBurger")
     p.drawString(100, 730, f"Fecha y Hora: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     # Detalles del pedido
     y_position = 700
-    for ingrediente in ingredientes:
-        p.drawString(100, y_position, f"{ingrediente.ingrediente.nombre} - ${ingrediente.ingrediente.precio}")
+    anterior_id = -1
+    n_pedido = 1
+    for pedido in pedidos:
+        if y_position < 100:
+            p.showPage()  # Start a new page if we're near the bottom
+            p.setFont("Helvetica-Bold", 14)
+            y_position = 750  # Reset position to the top of the new page
+            p.drawString(100, y_position, "Boleta de Compra - GoyoBurger")
+            p.drawString(100, y_position - 20, f"Fecha y Hora: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            y_position -= 60  # Add space for the header
+
+        if(anterior_id != pedido.pedido.id):
+            p.setFont("Helvetica-Bold", 12)
+            p.drawString(100, y_position, f"Pedido N°{n_pedido}")
+            y_position -= 20
+            n_pedido += 1
+        p.setFont("Helvetica", 10)
+        p.drawString(100, y_position, f"{pedido.ingrediente.nombre} - ${pedido.ingrediente.precio}")
         y_position -= 20
+        costo_total += pedido.ingrediente.precio
+        anterior_id = pedido.pedido.id
 
     # Total
-    p.drawString(100, y_position - 20, f"Total del Pedido: ${total_precio}")
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(100, y_position - 20, f"Total del Pedido: ${costo_total}")
 
     # Guarda el PDF
     p.showPage()
