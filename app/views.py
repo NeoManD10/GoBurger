@@ -108,8 +108,13 @@ def historial_view(request):
         messages.error(request, "Debes iniciar sesión para ver tu historial.")  # Muestra un mensaje de error
         return redirect('login')  # Redirige a la página de inicio de sesión
 
-    historial_pedidos = HistorialPedido.objects.filter(activo=False, usuario_id=usuario_id)  # Obtiene el historial de pedidos del usuario
-    return render(request, 'historial.html', {'historial_pedidos': historial_pedidos})  # Rinde la plantilla del historial
+    # Ordenamos por fecha en orden descendente
+    historial_pedidos = HistorialPedido.objects.filter(
+        activo=False, usuario_id=usuario_id
+    ).order_by('fecha_pedido')  # Ordenamos por fecha_pedido en orden descendente
+
+    return render(request, 'historial.html', {'historial_pedidos': historial_pedidos})  # Enviamos la lista ordenada
+
 
 
 def get_or_create_carrito(request):
@@ -192,11 +197,11 @@ def generar_boleta_pdf(request):
     p.setFont("Helvetica-Bold", 16)
     p.drawString(100, y_position - 20, f"Total del Pedido: ${costo_total}")
     anterior_id = -1
-    for x in range(contador):
-        historial_pedido = HistorialPedido.objects.create(usuario_id=usuario_id, activo=False)
-        for pedido_ingrediente in carrito.pedidos_guardados.all():
-            pedido_ingrediente.pedido = historial_pedido
-            pedido_ingrediente.save()
+    historial_pedido = HistorialPedido.objects.create(usuario_id=usuario_id, activo=False)
+    for pedido_ingrediente in carrito.pedidos_guardados.all():
+        pedido_ingrediente.pedido = historial_pedido
+        pedido_ingrediente.save()
+
 
     # Guarda el PDF
     p.showPage()
