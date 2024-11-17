@@ -208,6 +208,8 @@ def generar_boleta_pdf(request):
     y_position = 700
     anterior_id = -1
     n_pedido = 1
+    if not carrito.pedidos_guardados.exists():
+        return redirect('carrito')
     for pedido in pedidos:
         if y_position < 100:
             p.showPage()  # Start a new page if we're near the bottom
@@ -235,5 +237,5 @@ def generar_boleta_pdf(request):
     # Guarda el PDF
     p.showPage()
     p.save()
-
+    carrito.pedidos_guardados.clear()
     return response

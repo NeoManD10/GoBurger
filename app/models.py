@@ -34,6 +34,7 @@ class HistorialPedido(models.Model):
 class PedidoIngrediente(models.Model):
     pedido = models.ForeignKey(HistorialPedido, on_delete=models.CASCADE)
     ingrediente = models.ForeignKey(Ingrediente, on_delete=models.CASCADE)
+
     def __str__(self):
         return f'Ingrediente {self.ingrediente.nombre} en Pedido {self.pedido.id}'
 
