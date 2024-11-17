@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.shortcuts import render, redirect #Render rinde una plantilla HTML y devuelve una respuesta con el contenido HTML, mientras que redirect redirige al usuario a otra URL.
 from app.forms import LoginForm, RegisterForm #Formularios personalizados para el inicio de sesión y registro de usuario.
-from app.models import Usuario, Ingrediente,HistorialPedido, PedidoIngrediente, HistorialPedido #Modelos de la BDD
+from app.models import Usuario, Ingrediente, HistorialPedido, PedidoIngrediente, HistorialPedido, Carrito #Modelos de la BDD
 from reportlab.lib.pagesizes import letter # type: ignore
 from reportlab.pdfgen import canvas # type: ignore
 from datetime import datetime
@@ -32,7 +32,7 @@ def login_view(request):
 def home(request):
     if 'usuario_id' in request.session:  # Verifica si el usuario ha iniciado sesión (ID del usuario en la sesión)
         usuario_id = request.session['usuario_id']  # Obtiene el ID del usuario de la sesión
-        historial_completo = HistorialPedido.objects.filter(usuario_id=usuario_id).select_related('usuario')  # Obtiene el historial de pedidos para el usuario
+        historial_completo = HistorialPedido.objects.filter(usuario_id=usuario_id, activo=False).select_related('usuario')  # Obtiene el historial de pedidos para el usuario
         pedidos_con_ingredientes = []  # Lista para almacenar pedidos con sus ingredientes
 
         for pedido in historial_completo:  # Itera sobre cada pedido en el historial
@@ -48,6 +48,31 @@ def home(request):
         })
 
 
+def home_view(request):
+    if 'usuario_id' in request.session:  # Verifica si el usuario ha iniciado sesión
+        usuario_id = request.session['usuario_id']  # Obtiene el ID del usuario de la sesión
+        historial_completo = []  # Lista para almacenar cada pedido con sus ingredientes y total
+
+        pedidos = HistorialPedido.objects.filter(usuario_id=usuario_id, activo=False)  # Obtiene todos los pedidos del usuario
+
+        for pedido in pedidos:  # Itera sobre cada pedido
+            ingredientes = pedido.pedidoingrediente_set.all()  # Obtiene los ingredientes relacionados con el pedido
+            total_precio = pedido.calcular_total()  # Llama a la función para calcular el total del pedido
+            historial_completo.append({
+                'pedido': pedido,
+                'ingredientes': ingredientes,
+                'total_precio': total_precio
+            })  # Agrega el pedido y sus detalles a la lista
+
+        context = {
+            'historial_completo': historial_completo  # Pasa el historial completo a la plantilla
+        }
+    else:
+        context = {}  # Si no hay usuario autenticado, el contexto está vacío
+
+    return render(request, 'home.html', context)  # Rinde la plantilla `home.html` con el contexto
+
+
 def register_view(request):
     if request.method == 'POST':  # Verifica si el formulario fue enviado con el método POST
         form = RegisterForm(request.POST)  # Crea una instancia de RegisterForm con los datos del formulario
@@ -61,12 +86,15 @@ def register_view(request):
 
     return render(request, 'register.html', {'form': form})  # Rinde la plantilla de registro con el formulario
 
-@login_required
+
+def logout_view(request):
+    if 'usuario_nombre' in request.session:  # Verifica si 'usuario_nombre' está en la sesión
+        del request.session['usuario_nombre']  # Elimina 'usuario_nombre' de la sesión
+    return redirect('home')  # Redirige a la página principal
+
+
 def ingredientes_view(request):
-      
-
     ingredientes = Ingrediente.objects.all()  # Obtiene todos los ingredientes disponibles
-
     if request.method == 'POST':  # Verifica si el formulario fue enviado con el método POST
         ingredientes_ids = request.POST.getlist('ingredientes')  # Obtiene los IDs de los ingredientes seleccionados
 
@@ -85,9 +113,37 @@ def ingredientes_view(request):
             PedidoIngrediente.objects.create(pedido=historial_pedido, ingrediente=ingrediente)  # Crea un registro en PedidoIngrediente para asociar el ingrediente al pedido
 
         messages.success(request, "Pedido realizado con éxito.")  # Muestra un mensaje de éxito
+        pedido_ingredientes = PedidoIngrediente.objects.filter(pedido=historial_pedido)
+        carrito = get_or_create_carrito(request)
+        for pedido_ingrediente in pedido_ingredientes:
+            anadir_a_carrito_view(request, pedido_ingrediente)
+        carrito.save()
         return redirect('carrito')  # Redirige a la vista del carrito
 
     return render(request, 'ingredientes.html', {'ingredientes': ingredientes})  # Rinde la plantilla con la lista de ingredientes
+
+
+def seleccionar_ingredientes_view(request):
+    ingredientes = Ingrediente.objects.filter(disponible=True)  # Obtiene todos los ingredientes disponibles (filtro `disponible=True`)
+
+    if request.method == 'POST':  # Verifica si el formulario fue enviado con el método POST
+        usuario_id = request.session.get('usuario_id')  # Obtiene el ID del usuario desde la sesión
+        if not usuario_id:  # Si el usuario no ha iniciado sesión
+            return redirect('login')  # Redirige a la página de inicio de sesión
+
+        pedido = HistorialPedido.objects.create(usuario_id=usuario_id)  # Crea un nuevo historial de pedido para el usuario
+        ingredientes_seleccionados = request.POST.getlist('ingredientes')  # Obtiene los IDs de los ingredientes seleccionados
+        precio_total = 0  # Variable para calcular el precio total del pedido
+
+        for ingrediente_id in ingredientes_seleccionados:  # Itera sobre los IDs de ingredientes seleccionados
+            ingrediente = Ingrediente.objects.get(id=ingrediente_id)  # Obtiene cada ingrediente por su ID
+            PedidoIngrediente.objects.create(pedido=pedido, ingrediente=ingrediente)  # Crea un registro en PedidoIngrediente
+            precio_total += ingrediente.precio  # Suma el precio del ingrediente al total
+
+        request.session['precio_total'] = precio_total  # Guarda el precio total en la sesión
+        return redirect('carrito')  # Redirige a la vista de resumen del pedido
+
+    return render(request, 'ingredientes.html', {'ingredientes': ingredientes})  # Rinde la plantilla de selección de ingredientes
 
 
 def logout_view(request):
@@ -95,39 +151,51 @@ def logout_view(request):
         del request.session['usuario_nombre']  # Elimina 'usuario_nombre' de la sesión
     return redirect('home')  # Redirige a la página principal
 
-@login_required
+
 def historial_view(request):
     usuario_id = request.session.get('usuario_id')  # Obtiene el ID del usuario desde la sesión
     if not usuario_id:  # Si el usuario no ha iniciado sesión
         messages.error(request, "Debes iniciar sesión para ver tu historial.")  # Muestra un mensaje de error
         return redirect('login')  # Redirige a la página de inicio de sesión
 
-    historial_pedidos = HistorialPedido.objects.filter(usuario_id=usuario_id)  # Obtiene el historial de pedidos del usuario
+    historial_pedidos = HistorialPedido.objects.filter(activo=False, usuario_id=usuario_id)  # Obtiene el historial de pedidos del usuario
     return render(request, 'historial.html', {'historial_pedidos': historial_pedidos})  # Rinde la plantilla del historial
 
 
-def carrito_view(request):
+def get_or_create_carrito(request):
     usuario_id = request.session.get('usuario_id')  # Obtiene el ID del usuario desde la sesión
-    historial_pedido = HistorialPedido.objects.filter(usuario_id=usuario_id).last()  # Obtiene el último pedido del historial del usuario
+    if not usuario_id:  # Si el usuario no ha iniciado sesión
+        return redirect('login')  # Redirige a la página de inicio de sesión
+    carrito, created = Carrito.objects.get_or_create(usuario_id=usuario_id)  # Filtro por usuario_id
+    return carrito  # Retorna el carrito
 
-    ingredientes = PedidoIngrediente.objects.filter(pedido=historial_pedido)  # Obtiene los ingredientes del último pedido
-    total_precio = sum([ingrediente.ingrediente.precio for ingrediente in ingredientes])  # Calcula el precio total del pedido
 
-    return render(request, 'carrito.html', {
-        'ingredientes': ingredientes,  # Pasa la lista de ingredientes a la plantilla
-        'total_precio': total_precio  # Pasa el total del pedido a la plantilla
-    })
+def vista_carrito_view(request):
+    carrito = get_or_create_carrito(request)
+    pedidos = carrito.pedidos_guardados.all()
+    costo_total = 0
+    for pedido_ingrediente in carrito.pedidos_guardados.all():
+        costo_total += pedido_ingrediente.ingrediente.precio
+    return render(request, 'carrito.html', {'carrito': carrito, 'pedidos': pedidos, 'costo_total': costo_total})
+
+
+def anadir_a_carrito_view(request, pedido):
+    carrito = get_or_create_carrito(request)  # Obtiene el carrito del usuario
+    if isinstance(carrito, HttpResponse):  # Verifica si hubo una redirección
+        return carrito  # Redirige al login si no existe el carrito
+    carrito.pedidos_guardados.add(pedido)
+    carrito.save()
+    return redirect('carrito')
+
 
 def generar_boleta_pdf(request):
     usuario_id = request.session.get('usuario_id')
     if not usuario_id:
         messages.error(request, "Debes iniciar sesión para generar la boleta.")
         return redirect('login')
-
-    # Obtén el último pedido del usuario
-    historial_pedido = HistorialPedido.objects.filter(usuario_id=usuario_id).last()
-    ingredientes = PedidoIngrediente.objects.filter(pedido=historial_pedido)
-    total_precio = sum([ingrediente.ingrediente.precio for ingrediente in ingredientes])
+    carrito = get_or_create_carrito(request)
+    pedidos = carrito.pedidos_guardados.all()
+    costo_total = 0
 
     # Configura la respuesta HTTP para el PDF
     response = HttpResponse(content_type='application/pdf')
@@ -138,24 +206,56 @@ def generar_boleta_pdf(request):
     p.setFont("Helvetica", 12)
 
     # Agrega título y fecha/hora
+    p.setFont("Helvetica-Bold", 14)
     p.drawString(100, 750, "Boleta de Compra - GoyoBurger")
     p.drawString(100, 730, f"Fecha y Hora: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     # Detalles del pedido
     y_position = 700
-    for ingrediente in ingredientes:
-        p.drawString(100, y_position, f"{ingrediente.ingrediente.nombre} - ${ingrediente.ingrediente.precio}")
-        y_position -= 20
+    anterior_id = -1
+    n_pedido = 1
+    contador = 0
+    if not carrito.pedidos_guardados.exists():
+        return redirect('carrito')
+    for pedido in pedidos:
+        if y_position < 100:
+            p.showPage()  # Start a new page if we're near the bottom
+            p.setFont("Helvetica-Bold", 14)
+            y_position = 750  # Reset position to the top of the new page
+            p.drawString(100, y_position, "Boleta de Compra - GoyoBurger")
+            p.drawString(100, y_position - 20, f"Fecha y Hora: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            y_position -= 60  # Add space for the header
 
+        if(anterior_id != pedido.pedido.id):
+            p.setFont("Helvetica-Bold", 12)
+            p.drawString(100, y_position, f"Pedido N°{n_pedido}")
+            y_position -= 20
+            n_pedido += 1
+        p.setFont("Helvetica", 10)
+        p.drawString(100, y_position, f"{pedido.ingrediente.nombre} - ${pedido.ingrediente.precio}")
+        y_position -= 20
+        costo_total += pedido.ingrediente.precio
+        anterior_id = pedido.pedido.id
+        contador += 1
     # Total
-    p.drawString(100, y_position - 20, f"Total del Pedido: ${total_precio}")
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(100, y_position - 20, f"Total del Pedido: ${costo_total}")
+    anterior_id = -1
+    for x in range(contador):
+        historial_pedido = HistorialPedido.objects.create(usuario_id=usuario_id, activo=False)
+        for pedido_ingrediente in carrito.pedidos_guardados.all():
+            # Set the 'pedido' field of each PedidoIngrediente to the new HistorialPedido
+            pedido_ingrediente.pedido = historial_pedido
+            pedido_ingrediente.save()
 
     # Guarda el PDF
     p.showPage()
     p.save()
-
+    carrito.pedidos_guardados.clear()
     return response
 
 def about_us_view(request):
     return render(request, 'about_us.html')
 
+def about_us_view(request):
+    return render(request, 'about_us.html')

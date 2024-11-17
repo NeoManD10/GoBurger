@@ -4,39 +4,44 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resumen de tu Pedido</title>
+    <title>Carrito</title>
     <link rel="stylesheet" href="{% static 'carrito.css' %}">
 </head>
 <body>
+
     <div class="container">
-        <h1>Resumen de tu Pedido</h1>
-
-        <div class="pedido">
-            <ul class="ingredientes-lista">
-                {% for ingrediente in ingredientes %}
-                    <li class="ingrediente-item">
-                        <span class="ingrediente-nombre">{{ ingrediente.ingrediente.nombre }}</span>
-                        <span class="ingrediente-precio">${{ ingrediente.ingrediente.precio }}</span>
+        <h1>Tu carrito</h1>
+        {% if carrito.pedidos_guardados.all %}
+        <ul class="pedido-lista">
+            {% for pedido in pedidos %}
+                    {% ifchanged pedido.pedido.id %}
+                    <h1> Pedido N°{{forloop.counter}} </h1>
+                    {% endifchanged %}
+                    <li class="ingredientes-lista">
+                        <span class="ingrediente-nombre">{{ pedido.ingrediente.nombre }}</span> -
+                        <span class="ingrediente-precio">${{ pedido.ingrediente.precio }}</span>
                     </li>
-                {% endfor %}
-            </ul>
-            <p class="total">Total del Pedido: <strong>${{ total_precio }}</strong></p>
-        </div>
-
-        <div class="buttons">
-            <a href="{% url 'ingredientes' %}" class="btn">Seguir comprando</a>
-            <a href="{% url 'home' %}" class="btn">Volver al inicio</a>
-            <a href="{% url 'generar-boleta' %}" class="btn">Descargar Boleta</a>
-        </div>
-
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <p class="message {{ message.tags }}">{{ message }}</p>
             {% endfor %}
-        </div>
+        </ul>
+        {% else %}
+        <p>No hay ingredientes en tu carrito.</p>
         {% endif %}
+        <h2>Costo Total: ${{ costo_total }} </h2>
+        <form method="POST" action="{% url 'generar-boleta' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Confirmar Pedido</button>
+        </form>
+        <form action="{% url 'ingredientes' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Continuar comprando</button>
+        </form>
+        <form action="{% url 'home' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Volver a inicio</button>
+        </form>
     </div>
 </body>
 </html>
-
