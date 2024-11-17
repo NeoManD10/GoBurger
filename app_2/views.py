@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from app_2.forms import GenerarResetCode, VerificarResetCode, ActualizarContrasena
-from app.models import Usuario
+from app.models import Usuario, Carrito
 import random
 
 def generar_reset_code_view(request): # Genera el codigo que el usuario usa para recuperar la contraseña
@@ -18,6 +18,7 @@ def generar_reset_code_view(request): # Genera el codigo que el usuario usa para
     else:
         form = GenerarResetCode()
     return render(request, 'generar-reset-code.html', {'form': form})
+
 
 def verificar_reset_code_view(request): # Verificacion del codigo para actualizar la contraseña
     email = request.session.get("email_usuario")
@@ -37,6 +38,7 @@ def verificar_reset_code_view(request): # Verificacion del codigo para actualiza
         form = VerificarResetCode()
 
     return render(request, "verificar-reset-code.html", {"form": form})
+
 
 def actualizar_contrasena_view(request):
     email = request.session.get("email_usuario")
