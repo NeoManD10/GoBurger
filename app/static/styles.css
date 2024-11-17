@@ -96,3 +96,36 @@ footer {
     margin-bottom: 5px;
 }
 
+.social-links {
+    display: flex;
+    justify-content: center; /* Centra los íconos */
+    gap: 20px; /* Espacio entre íconos */
+    background-color: #333; /* Color de fondo oscuro */
+    padding: 10px;
+}
+
+.social-icon img {
+    width: 30px; /* Ajusta el tamaño del ícono aquí */
+    height: 30px;
+    filter: brightness(0) invert(1); /* Cambia el color del ícono a blanco */
+    transition: transform 0.2s; /* Transición para el efecto hover */
+}
+
+/* Efecto hover */
+.social-icon:hover img {
+    transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el mouse */
+}
+
+.nav-logo {
+    width: 60px;
+    height: auto;
+    max-height: 50px; /* Restringe la altura máxima */
+    max-width: 50px;  /* Restringe el ancho máximo */
+}
+.nav-links {
+    display: flex;
+    align-items: center; /* Centra verticalmente los elementos */
+    gap: 15px; /* Espacio entre el logo y los enlaces */
+    background-color: #ffcc00; /* Color de fondo de la barra de navegación */
+    padding: 10px 20px;
+}

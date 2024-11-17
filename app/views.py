@@ -146,6 +146,12 @@ def seleccionar_ingredientes_view(request):
     return render(request, 'ingredientes.html', {'ingredientes': ingredientes})  # Rinde la plantilla de selección de ingredientes
 
 
+def logout_view(request):
+    if 'usuario_nombre' in request.session:  # Verifica si 'usuario_nombre' está en la sesión
+        del request.session['usuario_nombre']  # Elimina 'usuario_nombre' de la sesión
+    return redirect('home')  # Redirige a la página principal
+
+
 def historial_view(request):
     usuario_id = request.session.get('usuario_id')  # Obtiene el ID del usuario desde la sesión
     if not usuario_id:  # Si el usuario no ha iniciado sesión
@@ -247,3 +253,7 @@ def generar_boleta_pdf(request):
     p.save()
     carrito.pedidos_guardados.clear()
     return response
+
+
+def about_us_view(request):
+    return render(request, 'about_us.html')

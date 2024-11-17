@@ -11,11 +11,15 @@
     <nav>
         <ul class="nav-links">
             {% if request.session.usuario_nombre %} <!--Verifica si el usuario ha iniciado sesión consultando la variable de sesión usuario_nombre.-->
-                <li>Bienvenido, {{ request.session.usuario_nombre }}</li>
+                <img src="{% static 'img/nigga.png' %}" alt="Ilustración" class="nav-logo"> <!--link de imagen utilizada-->
+                <li>{{ request.session.usuario_nombre }}</li>
                 <li><a href="{% url 'logout' %}">Cerrar Sesión</a></li>
+                <li><a href="{% url 'about_us' %}">Acerca de Nosotros</a></li>
             {% else %}
+                <img src="{% static 'img/nigga.png' %}" alt="Ilustración" class="nav-logo"> <!--link de imagen utilizada-->
                 <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
                 <li><a href="{% url 'register' %}">Registrarse</a></li>
+                <li><a href="{% url 'about_us' %}">Acerca de Nosotros</a></li>
             {% endif %}
         </ul>
     </nav>
@@ -23,11 +27,22 @@
     <section class="hero">
         <h1>Bienvenido a GoyoBurger</h1>
         <p>Personaliza tu hamburguesa con los mejores ingredientes</p>
+        {% if request.session.usuario_nombre %} <!--Verifica si el usuario ha iniciado sesión consultando la variable de sesión usuario_nombre.-->
         <a href="{% url 'ingredientes' %}" class="btn">Explorar Ingredientes</a>
+        {% else %}
+        <p>Inicia sesión para poder hacer un pedido.</p>
+        {% endif %}
     </section>
 
     <footer>
         <p>© 2024 GoyoBurger - Todos los derechos reservados</p>
+        <div class="social-links">
+            <a href="https://www.instagram.com/linustorwald/" target="_blank" class="social-icon">
+                <img src="{% static 'img/insta.png' %}" alt="Ilustración" class="illustration"> <!--link de imagen utilizada-->
+            </a>
+            <!-- Puedes agregar otros enlaces de redes sociales aquí -->
+        </div>
+        
     </footer>
 
     {% if messages %}

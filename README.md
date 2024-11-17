@@ -18,10 +18,15 @@
 
 ![image](https://github.com/user-attachments/assets/046c70e6-054e-4ef5-a9ae-f0b6ac7332bc)
 
+![image](https://github.com/user-attachments/assets/f98250e3-2001-4e4d-a86c-5467c8493162)
+
+![image](https://github.com/user-attachments/assets/d442f968-5b7e-4b9b-a536-1c436af5f3b3)
+
+
 ## Installation
 
 ### linux/Mac OS
-Create a folder called for example: test 
+Create a folder called for example, `GoyoBurger`.
 Once inside this folder open the terminal and write the command
 ```bash
 $ git clone https://github.com/NeoManD10/GoBurger.git
