@@ -10,12 +10,16 @@
 <body>
 
     <div class="container">
-        <h1>Tu carrito</h1>
+        <h1>Carrito</h1>
         {% if carrito.pedidos_guardados.all %}
         <ul class="pedido-lista">
             {% for pedido in pedidos %}
                 {% ifchanged pedido.pedido.id %}
                     <h1>Pedido N°<span class="pedido-numero">{{ forloop.counter }}</span></h1>
+                            <form method="POST" action="{% url 'borrar-del-carrito' pedido.pedido.id %}" >
+                        {% csrf_token %}
+                        <button type="submit">Eliminar</button>
+            </form>
                 {% endifchanged %}
                 <li class="ingredientes-lista">
                     <span class="ingrediente-nombre">{{ pedido.ingrediente.nombre }}</span> -
@@ -49,7 +53,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             const pedidoNumeroElements = document.querySelectorAll(".pedido-numero");
             let contador = 1;
-            
+
             pedidoNumeroElements.forEach(function(element) {
                 element.textContent = contador++;
             });

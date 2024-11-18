@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages #Permite mostrar mensajes al usuario, como alertas de éxito o error, que se pueden ver en la plantilla.
 from django.http import HttpResponse
 from django.conf import settings
-from django.shortcuts import render, redirect #Render rinde una plantilla HTML y devuelve una respuesta con el contenido HTML, mientras que redirect redirige al usuario a otra URL.
+from django.shortcuts import render, redirect, get_object_or_404 #Render rinde una plantilla HTML y devuelve una respuesta con el contenido HTML, mientras que redirect redirige al usuario a otra URL.
 from app.forms import LoginForm, RegisterForm #Formularios personalizados para el inicio de sesión y registro de usuario.
 from app.models import Usuario, Ingrediente, HistorialPedido, PedidoIngrediente, HistorialPedido, Carrito #Modelos de la BDD
 from reportlab.lib.pagesizes import letter # type: ignore
@@ -108,8 +108,13 @@ def historial_view(request):
         messages.error(request, "Debes iniciar sesión para ver tu historial.")  # Muestra un mensaje de error
         return redirect('login')  # Redirige a la página de inicio de sesión
 
-    historial_pedidos = HistorialPedido.objects.filter(activo=False, usuario_id=usuario_id)  # Obtiene el historial de pedidos del usuario
-    return render(request, 'historial.html', {'historial_pedidos': historial_pedidos})  # Rinde la plantilla del historial
+    # Ordenamos por fecha en orden descendente
+    historial_pedidos = HistorialPedido.objects.filter(
+        activo=False, usuario_id=usuario_id
+    ).order_by('fecha_pedido')  # Ordenamos por fecha_pedido en orden descendente
+
+    return render(request, 'historial.html', {'historial_pedidos': historial_pedidos})  # Enviamos la lista ordenada
+
 
 
 def get_or_create_carrito(request):
@@ -135,6 +140,13 @@ def anadir_a_carrito_view(request, pedido):
         return carrito  # Redirige al login si no existe el carrito
     carrito.pedidos_guardados.add(pedido)
     carrito.save()
+    return redirect('carrito')
+
+def borrar_del_carrito_view(request, pedido_id):
+    if request.method == "POST":
+        carrito = get_or_create_carrito(request)
+        pedidos = carrito.pedidos_guardados.filter(pedido__id=pedido_id)
+        pedidos.delete()
     return redirect('carrito')
 
 
@@ -192,11 +204,11 @@ def generar_boleta_pdf(request):
     p.setFont("Helvetica-Bold", 16)
     p.drawString(100, y_position - 20, f"Total del Pedido: ${costo_total}")
     anterior_id = -1
-    for x in range(contador):
-        historial_pedido = HistorialPedido.objects.create(usuario_id=usuario_id, activo=False)
-        for pedido_ingrediente in carrito.pedidos_guardados.all():
-            pedido_ingrediente.pedido = historial_pedido
-            pedido_ingrediente.save()
+    historial_pedido = HistorialPedido.objects.create(usuario_id=usuario_id, activo=False)
+    for pedido_ingrediente in carrito.pedidos_guardados.all():
+        pedido_ingrediente.pedido = historial_pedido
+        pedido_ingrediente.save()
+
 
     # Guarda el PDF
     p.showPage()
