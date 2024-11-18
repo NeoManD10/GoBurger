@@ -1,3 +1,4 @@
+from django.utils.html import format_html
 from django.contrib import admin
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
@@ -7,8 +8,18 @@ from .models import HistorialPedido, PedidoIngrediente, Ingrediente
 
 # Admin para Ingrediente (como estaba antes)
 class IngredienteAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'tipo', 'precio', 'disponible')
-    list_editable = ('precio',)
+    list_display = ('nombre', 'tipo', 'precio', 'disponible')  # Mostrar si está disponible
+    list_editable = ('precio', 'disponible')  # Permitir edición en línea de 'precio' y 'disponible'
+    search_fields = ('nombre', 'tipo')  # Habilitar barra de búsqueda
+    list_filter = ('tipo', 'disponible')  # Filtros por tipo y disponibilidad
+    ordering = ('tipo', 'nombre')  # Ordenar por tipo y nombre
+
+    def disponibilidad_icono(self, obj):
+        if obj.disponible:
+            return format_html('<span style="color: green;">✔ Disponible</span>')
+        return format_html('<span style="color: red;">✘ No Disponible</span>')
+    disponibilidad_icono.short_description = 'Disponibilidad'
+
 
 # Admin para Ganancias (ya definida previamente)
 class GananciasAdmin(admin.ModelAdmin):
