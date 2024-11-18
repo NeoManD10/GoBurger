@@ -20,7 +20,10 @@
 
 ![image](https://github.com/user-attachments/assets/f98250e3-2001-4e4d-a86c-5467c8493162)
 
-![image](https://github.com/user-attachments/assets/d442f968-5b7e-4b9b-a536-1c436af5f3b3)
+![image](https://github.com/user-attachments/assets/df5c81fa-2edf-47a7-bbbb-da67a8c0c562)
+
+![image](https://github.com/user-attachments/assets/d0072239-9640-4f17-8f1a-263ec2fdcf5c)
+
 
 
 ## Installation
