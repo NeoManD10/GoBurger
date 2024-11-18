@@ -68,7 +68,7 @@ def logout_view(request):
 
 
 def ingredientes_view(request):
-    ingredientes = Ingrediente.objects.all()  # Obtiene todos los ingredientes disponibles
+    ingredientes = Ingrediente.objects.filter(disponible=True)  # Filtrar solo ingredientes disponibles
     if request.method == 'POST':  # Verifica si el formulario fue enviado con el método POST
         ingredientes_ids = request.POST.getlist('ingredientes')  # Obtiene los IDs de los ingredientes seleccionados
 
