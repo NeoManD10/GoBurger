@@ -6,6 +6,13 @@ body {
     background-color: #f4f4f4;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+
 nav {
     background-color: #ffcc00;
     padding: 1rem 2rem;
@@ -117,11 +124,10 @@ footer {
 }
 
 .nav-logo {
-    width: 60px;
+    max-width: 100px;
     height: auto;
-    max-height: 50px; /* Restringe la altura máxima */
-    max-width: 50px;  /* Restringe el ancho máximo */
 }
+
 .nav-links {
     display: flex;
     align-items: center; /* Centra verticalmente los elementos */

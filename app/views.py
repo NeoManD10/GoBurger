@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages #Permite mostrar mensajes al usuario, como alertas de éxito o error, que se pueden ver en la plantilla.
 from django.http import HttpResponse
 from django.conf import settings
-from django.shortcuts import render, redirect #Render rinde una plantilla HTML y devuelve una respuesta con el contenido HTML, mientras que redirect redirige al usuario a otra URL.
+from django.shortcuts import render, redirect, get_object_or_404 #Render rinde una plantilla HTML y devuelve una respuesta con el contenido HTML, mientras que redirect redirige al usuario a otra URL.
 from app.forms import LoginForm, RegisterForm #Formularios personalizados para el inicio de sesión y registro de usuario.
 from app.models import Usuario, Ingrediente, HistorialPedido, PedidoIngrediente, HistorialPedido, Carrito #Modelos de la BDD
 from reportlab.lib.pagesizes import letter # type: ignore
@@ -140,6 +140,13 @@ def anadir_a_carrito_view(request, pedido):
         return carrito  # Redirige al login si no existe el carrito
     carrito.pedidos_guardados.add(pedido)
     carrito.save()
+    return redirect('carrito')
+
+def borrar_del_carrito_view(request, pedido_id):
+    if request.method == "POST":
+        carrito = get_or_create_carrito(request)
+        pedidos = carrito.pedidos_guardados.filter(pedido__id=pedido_id)
+        pedidos.delete()
     return redirect('carrito')
 
 
