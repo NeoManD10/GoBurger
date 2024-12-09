@@ -27,8 +27,6 @@ def login_view(request):
         form = LoginForm()  # Si no es POST, crea un formulario vacío para el inicio de sesión
     return render(request, 'login.html', {'form': form})  # Rinde la plantilla de inicio de sesión con el formulario
 
-
-
 def home(request):
     if 'usuario_id' in request.session:  # Verifica si el usuario ha iniciado sesión (ID del usuario en la sesión)
         usuario_id = request.session['usuario_id']  # Obtiene el ID del usuario de la sesión
@@ -60,12 +58,10 @@ def register_view(request):
 
     return render(request, 'register.html', {'form': form})  # Rinde la plantilla de registro con el formulario
 
-
 def logout_view(request):
     if 'usuario_nombre' in request.session:  # Verifica si 'usuario_nombre' está en la sesión
         del request.session['usuario_nombre']  # Elimina 'usuario_nombre' de la sesión
     return redirect('home')  # Redirige a la página principal
-
 
 def ingredientes_view(request):
     ingredientes = Ingrediente.objects.filter(disponible=True)  # Filtrar solo ingredientes disponibles
@@ -95,12 +91,10 @@ def ingredientes_view(request):
 
     return render(request, 'ingredientes.html', {'ingredientes': ingredientes})  # Rinde la plantilla con la lista de ingredientes
 
-
 def logout_view(request):
     if 'usuario_nombre' in request.session:  # Verifica si 'usuario_nombre' está en la sesión
         del request.session['usuario_nombre']  # Elimina 'usuario_nombre' de la sesión
     return redirect('home')  # Redirige a la página principal
-
 
 def historial_view(request):
     usuario_id = request.session.get('usuario_id')  # Obtiene el ID del usuario desde la sesión
@@ -115,15 +109,12 @@ def historial_view(request):
 
     return render(request, 'historial.html', {'historial_pedidos': historial_pedidos})  # Enviamos la lista ordenada
 
-
-
 def get_or_create_carrito(request):
     usuario_id = request.session.get('usuario_id')  # Obtiene el ID del usuario desde la sesión
     if not usuario_id:  # Si el usuario no ha iniciado sesión
         return redirect('login')  # Redirige a la página de inicio de sesión
     carrito, created = Carrito.objects.get_or_create(usuario_id=usuario_id)  # Filtro por usuario_id
     return carrito  # Retorna el carrito
-
 
 def vista_carrito_view(request):
     carrito = get_or_create_carrito(request)
@@ -132,7 +123,6 @@ def vista_carrito_view(request):
     for pedido_ingrediente in carrito.pedidos_guardados.all():
         costo_total += pedido_ingrediente.ingrediente.precio
     return render(request, 'carrito.html', {'carrito': carrito, 'pedidos': pedidos, 'costo_total': costo_total})
-
 
 def anadir_a_carrito_view(request, pedido):
     carrito = get_or_create_carrito(request)  # Obtiene el carrito del usuario
@@ -148,7 +138,6 @@ def borrar_del_carrito_view(request, pedido_id):
         pedidos = carrito.pedidos_guardados.filter(pedido__id=pedido_id)
         pedidos.delete()
     return redirect('carrito')
-
 
 def generar_boleta_pdf(request):
     usuario_id = request.session.get('usuario_id')
@@ -208,7 +197,6 @@ def generar_boleta_pdf(request):
     for pedido_ingrediente in carrito.pedidos_guardados.all():
         pedido_ingrediente.pedido = historial_pedido
         pedido_ingrediente.save()
-
 
     # Guarda el PDF
     p.showPage()

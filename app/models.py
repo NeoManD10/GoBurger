@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 class Usuario(models.Model):
     nombre = models.CharField(max_length=100)
@@ -15,6 +16,14 @@ class Ingrediente(models.Model):
     tipo = models.CharField(max_length=50)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     disponible = models.BooleanField(default=True)
+
+    def clean(self):
+        if self.precio < 0:
+            raise ValidationError("El precio no puede ser negativo.")
+        
+    def save(self, *args, **kwargs):
+        self.clean()  # Valida antes de guardar
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.nombre
