@@ -1,6 +1,7 @@
 # Information systems application
 
 **GoyoBurger** is a web application where users can customize their burgers by choosing up to 4 toppings from a variety of options. Users can register, log in, place orders and view their order history.
+It should be noted that this is an application in the process of improvement, so at some point it will be a professional product in terms of scalability and design.
 
 ## Index
 - [Requeriments](#Requirements)
